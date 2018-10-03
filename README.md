@@ -1,2 +1,4 @@
 # FtpBoss
-eletron.js app for handling simple ftp server
+electron.js app for handling simple ftp server
+
+### elctron, cra, redux, styled-components
