@@ -1,3 +1,7 @@
+/**
+ * Created by juliusz.jakubowski@gmail.com on 03.10.18.
+ */
+
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
