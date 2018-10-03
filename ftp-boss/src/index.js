@@ -1,11 +1,23 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
+
+import store, { history } from './store/store';
+
+import App from './components/App';
+
 import * as serviceWorker from './serviceWorker';
 
+const target = document.querySelector('#root');
 
-ReactDOM.render(<App />, document.getElementById('root'));
+render(
+    <Provider store={store}>
+        <ConnectedRouter history={history}>
+            <App />
+        </ConnectedRouter>
+    </Provider>,
+    target);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
