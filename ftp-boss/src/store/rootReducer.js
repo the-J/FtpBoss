@@ -4,7 +4,7 @@
 
 import { combineReducers } from 'redux';
 
-import test from './test';
+import test from './reducers/test';
 
 export default combineReducers({
     test
