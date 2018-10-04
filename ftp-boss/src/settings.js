@@ -3,11 +3,10 @@
  */
 
 export const colors = {
-    'white': '#FFF',
+    'background': '#FFF',
     'dark-blue': '#152642',
     'blue': '#084575',
     'light-cream': '#f3efd5',
     'cream': '#e7d5a7',
-    'dark-cream': '#c0b2a4',
-    'accept': '#00ff00'
+    'dark-cream': '#c0b2a4'
 };
