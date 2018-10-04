@@ -2,36 +2,45 @@
  * Created by juliusz.jakubowski@gmail.com on 03.10.18.
  */
 
-import React, { Component, Fragment } from 'react';
-import { Link, Route } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Button, Container, Header, Icon } from 'semantic-ui-react';
+import styled from 'styled-components';
 
-import Settings from './Settings';
+import { colors } from '../settings';
 
 import { testAction } from '../store/actions/test';
 
 class App extends Component {
-    testAction = ( event ) => {
+    testAction = () => {
         this.props.testAction();
     };
 
     render() {
         return (
-            <Fragment>
-                <header>
-                    <Link to="/settings">Settings</Link>
-                </header>
+            <AppStyles>
+                <Container>
+                    <Header as='h1'>
+                        App under construction
+                    </Header>
+                    {/*<pre>{JSON.stringify(this.props)}</pre>*/}
 
-                <pre>{JSON.stringify(this.props)}</pre>
+                    {/*<Button*/}
+                    {/*onClick={this.testAction}*/}
+                    {/*>*/}
+                    {/*button test*/}
+                    {/*</Button>*/}
 
-                <button onClick={this.testAction}>Test redux action</button>
-
-                <main>
-                    <Route exact path="/settings" component={Settings} />
-                </main>
-
-                <div>App under construction</div>
-            </Fragment>
+                    <Button
+                        basic
+                        as={Link}
+                        to='/settings'
+                    >
+                        <Icon name='cog' />Settings
+                    </Button>
+                </Container>
+            </AppStyles>
         );
     }
 }
@@ -45,3 +54,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+const AppStyles = styled.div`
+  margin-top:  20px;
+  background: ${colors.background}
+`;
