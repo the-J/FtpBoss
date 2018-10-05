@@ -19,8 +19,8 @@ render(
     <Provider store={store}>
         <ConnectedRouter history={history}>
             <Switch>
-                <Route exact path="/" component={App} />
                 <Route exact path="/settings" component={Settings} />
+                <Route path="/" component={App} />
             </Switch>
         </ConnectedRouter>
     </Provider>,
