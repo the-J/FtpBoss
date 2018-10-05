@@ -2,9 +2,7 @@
  * Created by juliusz.jakubowski@gmail.com on 03.10.18.
  */
 
-const electron = require('electron');
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
+const { app, net, BrowserWindow, Menu } = require('electron');
 
 const path = require('path');
 const url = require('url');
@@ -13,8 +11,33 @@ const isDev = require('electron-is-dev');
 let mainWindow;
 
 function createWindow() {
-    mainWindow = new BrowserWindow({ width: 900, height: 680 });
+    mainWindow = new BrowserWindow({
+        width: 900,
+        height: 680
+    });
+
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
+
+    const template = [ {
+        label: 'Dev',
+        submenu: [ {
+            label: 'DevConsole',
+            accelerator: process.platform === 'darwin' ? 'Command+Shift+I' : 'Ctrl+Shift+I',
+            click() {
+                mainWindow.webContents.openDevTools();
+            }
+        }, {
+            label: 'Connect',
+            accelerator: process.platform === 'darwin' ? 'Command+O' : 'Ctrl+O',
+            click() {
+                connectToClient();
+            }
+        } ]
+    } ];
+
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+
     mainWindow.on('closed', () => mainWindow = null);
 }
 
