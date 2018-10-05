@@ -1,6 +1,7 @@
 {
   "name": "ftp-boss",
   "version": "0.1.0",
+  "description": "Simple desktop for handling ftp server files",
   "author": {
     "name": "Juliusz Jakubowski",
     "email": "juliusz.jakubowski@gmail.com"
