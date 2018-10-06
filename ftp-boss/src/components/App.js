@@ -5,16 +5,21 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Container, Header, Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
-
+import { Button, Container, Header, Icon } from 'semantic-ui-react';
 import { colors } from '../settings';
 
 import { testAction } from '../store/actions/test';
 
+const { ipcRenderer } = window.require('electron');
+
 class App extends Component {
     testAction = () => {
         this.props.testAction();
+    };
+
+    connectToFtp = () => {
+        ipcRenderer.send('connect-ftp', { nothingHere: 'nothing' });
     };
 
     render() {
@@ -26,11 +31,9 @@ class App extends Component {
                     </Header>
                     {/*<pre>{JSON.stringify(this.props)}</pre>*/}
 
-                    {/*<Button*/}
-                    {/*onClick={this.testAction}*/}
-                    {/*>*/}
-                    {/*button test*/}
-                    {/*</Button>*/}
+                    <Button onClick={this.connectToFtp}>
+                        FTP
+                    </Button>
 
                     <Button
                         basic
