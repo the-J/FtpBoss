@@ -14,6 +14,11 @@ const isDev = require('electron-is-dev');
 
 const Client = require('ftp');
 
+const {
+    CONNECT_FTP,
+    SEND_TO_RENDERER
+} = require('../src/utils/const');
+
 let mainWindow;
 
 function createWindow() {
@@ -75,14 +80,13 @@ function connectFtp() {
 
             console.dir(list);
 
+            mainWindow.send(SEND_TO_RENDERER, list);
+
             client.end();
         });
     });
-    // connect to localhost:21 as anonymous
+
     client.connect(config);
 }
 
-ipcMain.on('connect-ftp', ( event, arg ) => {
-    console.log(arg);
-    connectFtp();
-});
+ipcMain.on(CONNECT_FTP, () => connectFtp());

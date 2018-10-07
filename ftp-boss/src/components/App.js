@@ -11,25 +11,47 @@ import { colors } from '../settings';
 
 import { testAction } from '../store/actions/test';
 
+import { CONNECT_FTP, SEND_TO_RENDERER } from '../utils/const';
+
 const { ipcRenderer } = window.require('electron');
 
 class App extends Component {
-    testAction = () => {
-        this.props.testAction();
-    };
+    constructor() {
+        super();
 
-    connectToFtp = () => {
-        ipcRenderer.send('connect-ftp', { nothingHere: 'nothing' });
+        this.state = {
+            list: []
+        };
+    }
+
+    componentDidMount() {
+        ipcRenderer.on(SEND_TO_RENDERER, this.dataFromMain);
+    }
+
+    componentWillUnmount() {
+        ipcRenderer.removeListener(SEND_TO_RENDERER, this.dataFromMain);
+    }
+
+    testAction = () => this.props.testAction();
+
+    connectToFtp = () => ipcRenderer.send(CONNECT_FTP);
+
+    dataFromMain = ( event, data ) => {
+        console.log({ event }, { data });
+        this.setState({ list: data });
     };
 
     render() {
+        const { list } = this.state;
+
         return (
             <AppStyles>
                 <Container>
                     <Header as='h1'>
                         App under construction
                     </Header>
-                    {/*<pre>{JSON.stringify(this.props)}</pre>*/}
+                    <pre>{list.length ?
+                        list.map(dir => <p>{dir.name}, {dir.date}</p>) : 'emty dir'}</pre>
 
                     <Button onClick={this.connectToFtp}>
                         FTP
