@@ -22,7 +22,7 @@ const Settings = props => (
 
             <Button
                 basic
-                color='positive'
+                color='green'
                 as={Link}
                 to={'/'}
                 onClick={() => props.changePage()}
@@ -32,7 +32,7 @@ const Settings = props => (
 
             <Button
                 basic
-                color='negative'
+                color='red'
                 as={Link}
                 to={'/'}
                 onClick={() => props.changePage()}

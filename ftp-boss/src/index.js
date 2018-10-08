@@ -11,7 +11,8 @@ import * as serviceWorker from './serviceWorker';
 import store, { history } from './store/store';
 
 import App from './components/App';
-import Settings from './components/Settings';
+// import Settings from './components/Settings';
+import FtpForm from './components/FtpForm';
 
 const target = document.querySelector('#root');
 
@@ -19,14 +20,12 @@ render(
     <Provider store={store}>
         <ConnectedRouter history={history}>
             <Switch>
-                <Route exact path="/settings" component={Settings} />
+                {/*<Route exact path="/settings" component={Settings} />*/}
+                <Route exact path="/ftp" component={FtpForm} />
                 <Route path="/" component={App} />
             </Switch>
         </ConnectedRouter>
     </Provider>,
     target);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();

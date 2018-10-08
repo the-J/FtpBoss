@@ -57,13 +57,13 @@ class App extends Component {
                         FTP
                     </Button>
 
-                    <Button
-                        basic
-                        as={Link}
-                        to='/settings'
-                    >
-                        <Icon name='cog' />Settings
-                    </Button>
+                    {/*<Button*/}
+                    {/*basic*/}
+                    {/*as={Link}*/}
+                    {/*to='/settings'*/}
+                    {/*>*/}
+                    {/*<Icon name='cog' />SETTINGS*/}
+                    {/*</Button>*/}
                 </Container>
             </AppStyles>
         );
