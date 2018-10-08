@@ -5,7 +5,9 @@
 import { combineReducers } from 'redux';
 
 import test from './reducers/test';
+import serverSettings from './reducers/serverSettings';
 
 export default combineReducers({
-    test
+    test,
+    serverSettings
 });
