@@ -36,10 +36,7 @@ class App extends Component {
 
     connectToFtp = () => ipcRenderer.send(CONNECT_FTP);
 
-    dataFromMain = ( event, data ) => {
-        console.log({ event }, { data });
-        this.setState({ list: data });
-    };
+    dataFromMain = ( event, data ) => this.setState({ list: data });
 
     render() {
         const { list } = this.state;
@@ -50,11 +47,30 @@ class App extends Component {
                     <Header as='h1'>
                         App under construction
                     </Header>
-                    <pre>{list.length ?
-                        list.map(dir => <p>{dir.name}, {dir.date}</p>) : 'emty dir'}</pre>
+
+                    {JSON.stringify(this.props, undefined, 2)}
+
+
+                    <pre>
+                        {
+                            list.length ?
+                                list.map(( dir, i ) => (
+                                    <p key={i}>
+                                        {dir.name}, {dir.date}
+                                    </p>
+                                )) : 'emty dir'
+                        }</pre>
 
                     <Button onClick={this.connectToFtp}>
-                        FTP
+                        CONNECT FTP
+                    </Button>
+
+                    <Button
+                        basic
+                        as={Link}
+                        to='/ftp'
+                    >
+                        <Icon name='server' />FTP SETTINGS
                     </Button>
 
                     {/*<Button*/}
