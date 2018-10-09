@@ -14,7 +14,7 @@ const isDev = require('electron-is-dev');
 const settings = require('electron-settings');
 const EasyFtp = require('easy-ftp');
 
-const Client = require('ftp');
+const defaultCredentials = require('../private/credentials');
 
 const {
     CONNECT_FTP,
@@ -69,12 +69,7 @@ app.on('activate', () => {
 
 function connectFtp() {
     const ftp = new EasyFtp();
-    const config = {
-        host: 'mkwk019.cba.pl',
-        user: 'thej',
-        password: 'Qwe123,qwe.',
-        type: 'ftp'
-    };
+    const config = defaultCredentials;
 
     const client = new Client();
 
