@@ -35,9 +35,7 @@ class App extends Component {
 
     testAction = () => this.props.testAction();
 
-    connectToFtp = () => ipcRenderer.send(ipc.CONNECT_FTP);
-
-    gotoDir = ( dirName ) => ipcRenderer.send(ipc.GO_TO_DIR, dirName);
+    getDirectoryFilesList = ( dirName ) => ipcRenderer.send(ipc.LIST_DIRECTORY_FILES, dirName);
 
     downloadFile = () => console.log('download file');
 
@@ -63,7 +61,7 @@ class App extends Component {
                                     <Button
                                         key={i}
                                         as={'p'}
-                                        onClick={() => this.gotoDir(dir.name)}
+                                        onClick={() => this.getDirectoryFilesList(dir.name)}
                                     >
                                         {dir.name}
                                     </Button>
@@ -72,7 +70,7 @@ class App extends Component {
 
                     <Button
                         basic
-                        onClick={this.connectToFtp}
+                        onClick={() => this.getDirectoryFilesList()}
                     >
                         CONNECT FTP
                     </Button>
