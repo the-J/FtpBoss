@@ -11,6 +11,8 @@ const {
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
+const settings = require('electron-settings');
+const EasyFtp = require('easy-ftp');
 
 const Client = require('ftp');
 
@@ -61,8 +63,7 @@ app.on('activate', () => {
 });
 
 function connectFtp() {
-    console.log('ftp started');
-
+    const ftp = new EasyFtp();
     const config = {
         host: '',
         port: '',
@@ -78,15 +79,16 @@ function connectFtp() {
                 console.log(err);
             }
 
-            console.dir(list);
+    ftp.connect(config);
 
-            mainWindow.send(SEND_TO_RENDERER, list);
-
-            client.end();
+    ftp.on('open', () => {
+        ftp.ls('/', ( err, list ) => {
+            if (err) console.error({ err });
+            else mainWindow.send(SEND_TO_RENDERER, list);
         });
-    });
 
-    client.connect(config);
+        ftp.close();
+    });
 }
 
 ipcMain.on(CONNECT_FTP, () => connectFtp());

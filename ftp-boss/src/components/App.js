@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Button, Container, Header, Icon } from 'semantic-ui-react';
+
 import { colors } from '../settings';
 
 import { testAction } from '../store/actions/test';

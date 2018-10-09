@@ -29,9 +29,9 @@
   },
   "dependencies": {
     "connected-react-router": "^4.5.0",
+    "easy-ftp": "^0.3.44",
     "electron-is-dev": "^1.0.1",
     "electron-settings": "^3.2.0",
-    "ftp": "^0.3.10",
     "history": "^4.7.2",
     "lodash": "^4.17.11",
     "prop-types": "^15.6.2",
