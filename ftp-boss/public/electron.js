@@ -16,10 +16,14 @@ const EasyFtp = require('easy-ftp');
 
 const defaultCredentials = require('../private/credentials');
 
-const {
-    CONNECT_FTP,
-    SEND_TO_RENDERER
-} = require('../src/utils/const');
+/**
+ * Defining global ipcMain / ipcRenderer commands
+ * @type {{CONNECT_FTP: string, SEND_TO_RENDERER: string}}
+ */
+global.ipc = {
+    CONNECT_FTP: 'connect-ftp',
+    SEND_TO_RENDERER: 'send-to-renderer'
+};
 
 let mainWindow;
 
@@ -71,24 +75,18 @@ function connectFtp() {
     const ftp = new EasyFtp();
     const config = defaultCredentials;
 
-    const client = new Client();
-
-    client.on('ready', function () {
-        client.list(function ( err, list ) {
-            if (err) {
-                console.log(err);
-            }
+    console.log('ftp connect');
 
     ftp.connect(config);
 
     ftp.on('open', () => {
         ftp.ls('/', ( err, list ) => {
             if (err) console.error({ err });
-            else mainWindow.send(SEND_TO_RENDERER, list);
+            else mainWindow.send(ipc.SEND_TO_RENDERER, list);
         });
 
         ftp.close();
     });
 }
 
-ipcMain.on(CONNECT_FTP, () => connectFtp());
+ipcMain.on(ipc.CONNECT_FTP, () => connectFtp());

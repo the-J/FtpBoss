@@ -12,9 +12,9 @@ import { colors } from '../settings';
 
 import { testAction } from '../store/actions/test';
 
-import { CONNECT_FTP, SEND_TO_RENDERER } from '../utils/const';
+const { ipcRenderer, remote } = window.require('electron');
 
-const { ipcRenderer } = window.require('electron');
+const ipc = remote.getGlobal('ipc');
 
 class App extends Component {
     constructor() {
@@ -26,16 +26,16 @@ class App extends Component {
     }
 
     componentDidMount() {
-        ipcRenderer.on(SEND_TO_RENDERER, this.dataFromMain);
+        ipcRenderer.on(ipc.SEND_TO_RENDERER, this.dataFromMain);
     }
 
     componentWillUnmount() {
-        ipcRenderer.removeListener(SEND_TO_RENDERER, this.dataFromMain);
+        ipcRenderer.removeListener(ipc.SEND_TO_RENDERER, this.dataFromMain);
     }
 
     testAction = () => this.props.testAction();
 
-    connectToFtp = () => ipcRenderer.send(CONNECT_FTP);
+    connectToFtp = () => ipcRenderer.send(ipc.CONNECT_FTP);
 
     dataFromMain = ( event, data ) => this.setState({ list: data });
 
