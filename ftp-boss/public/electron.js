@@ -16,15 +16,6 @@ const EasyFtp = require('easy-ftp');
 
 const defaultCredentials = require('../private/credentials');
 
-/**
- * Defining global ipcMain / ipcRenderer commands
- * @type {{CONNECT_FTP: string, SEND_TO_RENDERER: string}}
- */
-global.ipc = {
-    CONNECT_FTP: 'connect-ftp',
-    SEND_TO_RENDERER: 'send-to-renderer'
-};
-
 let mainWindow;
 
 function createWindow() {
@@ -50,7 +41,7 @@ function createWindow() {
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
 
-    mainWindow.webContents.on('did-finish-load', function() {
+    mainWindow.webContents.on('did-finish-load', function () {
         mainWindow.show();
     });
 
@@ -71,17 +62,38 @@ app.on('activate', () => {
     }
 });
 
-function connectFtp() {
+//************************************
+
+
+/**
+ * Defining global ipcMain / ipcRenderer commands
+ */
+global.ipc = {
+    CONNECT_FTP: 'connect-ftp',
+    SEND_TO_RENDERER: 'send-to-renderer',
+    GO_TO_DIR: 'go-to-directory'
+};
+
+/**
+ * @todo electron-settings
+ * @returns {{host, user, password, type}|*}
+ */
+function serverCredentials() {
+    return defaultCredentials;
+}
+
+/**
+ * ftp methods
+ */
+
+function connectToMainDir() {
     const ftp = new EasyFtp();
-    const config = defaultCredentials;
-
-    console.log('ftp connect');
-
-    ftp.connect(config);
+    ftp.connect(serverCredentials());
 
     ftp.on('open', () => {
+
         ftp.ls('/', ( err, list ) => {
-            if (err) console.error({ err });
+            if (err) console.log({ err });
             else mainWindow.send(ipc.SEND_TO_RENDERER, list);
         });
 
@@ -89,4 +101,23 @@ function connectFtp() {
     });
 }
 
-ipcMain.on(ipc.CONNECT_FTP, () => connectFtp());
+function goToDir( dirPath ) {
+    // @todo validate path
+    console.log('goToDir', { dirPath });
+
+    const ftp = new EasyFtp();
+    ftp.connect(serverCredentials());
+
+    ftp.on('open', () => {
+
+        ftp.ls('./' + dirPath, ( err, list ) => {
+            if (err) console.log(err);
+            else mainWindow.send(ipc.SEND_TO_RENDERER, list);
+        });
+
+        ftp.close();
+    });
+}
+
+ipcMain.on(ipc.CONNECT_FTP, () => connectToMainDir());
+ipcMain.on(ipc.GO_TO_DIR, ( event, arg ) => goToDir(arg));
