@@ -26,7 +26,8 @@ let mainWindow;
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 900,
-        height: 680
+        height: 680,
+        show: false
     });
 
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
@@ -44,6 +45,10 @@ function createWindow() {
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
+
+    mainWindow.webContents.on('did-finish-load', function() {
+        mainWindow.show();
+    });
 
     mainWindow.on('closed', () => mainWindow = null);
 }
@@ -65,10 +70,10 @@ app.on('activate', () => {
 function connectFtp() {
     const ftp = new EasyFtp();
     const config = {
-        host: '',
-        port: '',
-        user: '',
-        password: ''
+        host: 'mkwk019.cba.pl',
+        user: 'thej',
+        password: 'Qwe123,qwe.',
+        type: 'ftp'
     };
 
     const client = new Client();
