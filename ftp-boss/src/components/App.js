@@ -26,18 +26,22 @@ class App extends Component {
     }
 
     componentDidMount() {
-        ipcRenderer.on(ipc.SEND_TO_RENDERER, this.dataFromMain);
+        ipcRenderer.on(ipc.SEND_TO_RENDERER, this.directoryList);
     }
 
     componentWillUnmount() {
-        ipcRenderer.removeListener(ipc.SEND_TO_RENDERER, this.dataFromMain);
+        ipcRenderer.removeListener(ipc.SEND_TO_RENDERER, this.directoryList);
     }
 
     testAction = () => this.props.testAction();
 
     connectToFtp = () => ipcRenderer.send(ipc.CONNECT_FTP);
 
-    dataFromMain = ( event, data ) => this.setState({ list: data });
+    gotoDir = ( dirName ) => ipcRenderer.send(ipc.GO_TO_DIR, dirName);
+
+    downloadFile = () => console.log('download file');
+
+    directoryList = ( event, list ) => this.setState({ list });
 
     render() {
         const { list } = this.state;
@@ -49,22 +53,33 @@ class App extends Component {
                         App under construction
                     </Header>
 
-                    {JSON.stringify(this.props, undefined, 2)}
+                    {/*{JSON.stringify(this.props, undefined, 2)}*/}
 
 
                     <pre>
                         {
                             list.length ?
                                 list.map(( dir, i ) => (
-                                    <p key={i}>
-                                        {dir.name}, {dir.date}
-                                    </p>
+                                    <Button
+                                        key={i}
+                                        as={'p'}
+                                        onClick={() => this.gotoDir(dir.name)}
+                                    >
+                                        {dir.name}
+                                    </Button>
                                 )) : 'emty dir'
                         }</pre>
 
-                    <Button onClick={this.connectToFtp}>
+                    <Button
+                        basic
+                        onClick={this.connectToFtp}
+                    >
                         CONNECT FTP
                     </Button>
+
+                    {/*<Button onClick={this.gotoDir}>*/}
+                    {/*DIR GLITCH*/}
+                    {/*</Button>*/}
 
                     <Button
                         basic
