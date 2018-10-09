@@ -14,7 +14,7 @@ const isDev = require('electron-is-dev');
 const settings = require('electron-settings');
 const EasyFtp = require('easy-ftp');
 
-const defaultCredentials = require('../private/credentials');
+const defaultCredentials = require('./credentials');
 
 let mainWindow;
 
