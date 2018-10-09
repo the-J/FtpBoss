@@ -62,16 +62,12 @@ app.on('activate', () => {
     }
 });
 
-//************************************
-
-
 /**
  * Defining global ipcMain / ipcRenderer commands
  */
 global.ipc = {
-    CONNECT_FTP: 'connect-ftp',
     SEND_TO_RENDERER: 'send-to-renderer',
-    GO_TO_DIR: 'go-to-directory'
+    LIST_DIRECTORY_FILES: 'list-directory-files'
 };
 
 /**
@@ -86,38 +82,37 @@ function serverCredentials() {
  * ftp methods
  */
 
-function connectToMainDir() {
-    const ftp = new EasyFtp();
-    ftp.connect(serverCredentials());
+/**
+ * @param {String} [dirPath] - path to directory
+ * @return {Array}
+ *
+ * returns 'ls /' if no path specified
+ */
+function listDirectoryFiles( dirPath ) {
+    if (!dirPath) dirPath = '';
 
-    ftp.on('open', () => {
-
-        ftp.ls('/', ( err, list ) => {
-            if (err) console.log({ err });
-            else mainWindow.send(ipc.SEND_TO_RENDERER, list);
-        });
-
-        ftp.close();
-    });
-}
-
-function goToDir( dirPath ) {
     // @todo validate path
-    console.log('goToDir', { dirPath });
+    console.log('listDirectoryFiles', { dirPath });
 
     const ftp = new EasyFtp();
     ftp.connect(serverCredentials());
 
     ftp.on('open', () => {
-
-        ftp.ls('./' + dirPath, ( err, list ) => {
-            if (err) console.log(err);
-            else mainWindow.send(ipc.SEND_TO_RENDERER, list);
-        });
+        if (dirPath) {
+            ftp.ls('./' + dirPath, ( err, list ) => {
+                if (err) console.log(err);
+                else mainWindow.send(ipc.SEND_TO_RENDERER, list);
+            });
+        }
+        else {
+            ftp.ls('/', ( err, list ) => {
+                if (err) console.log(err);
+                else mainWindow.send(ipc.SEND_TO_RENDERER, list);
+            });
+        }
 
         ftp.close();
     });
 }
 
-ipcMain.on(ipc.CONNECT_FTP, () => connectToMainDir());
-ipcMain.on(ipc.GO_TO_DIR, ( event, arg ) => goToDir(arg));
+ipcMain.on(ipc.LIST_DIRECTORY_FILES, ( event, arg ) => listDirectoryFiles(arg));
