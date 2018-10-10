@@ -12,7 +12,7 @@ import { bindActionCreators } from 'redux';
 
 import { colors } from '../settings';
 
-import { serverSettingsAction } from '../store/actions/serverSettingsAction';
+import { serverSettings } from '../store/actions/serverSettings';
 
 class FtpForm extends Component {
     constructor() {
@@ -55,7 +55,7 @@ class FtpForm extends Component {
     handleSubmit = () => {
         if (!this.validateData()) {
             this.props.changePage();
-            this.props.serverSettingsAction(this.state.serverParams);
+            this.props.serverSettings(this.state.serverParams);
         }
     };
 
@@ -158,7 +158,7 @@ class FtpForm extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     changePage: () => push('/'),
-    serverSettingsAction: ( serverParams ) => serverSettingsAction(serverParams)
+    serverSettings: ( serverParams ) => serverSettings(serverParams)
 }, dispatch);
 
 export default connect(
