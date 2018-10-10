@@ -12,7 +12,7 @@ import { colors } from '../settings';
 
 import FilesList from './FilesList';
 
-import { testAction } from '../store/actions/test';
+import { currentPath } from '../store/actions/currentPath';
 
 const { ipcRenderer, remote } = window.require('electron');
 
@@ -36,9 +36,11 @@ class FtpBoss extends Component {
         ipcRenderer.removeListener(ipc.SEND_TO_RENDERER, this.directoryList);
     }
 
-    testAction = () => this.props.testAction();
-
-    getDirectoryFilesList = ( dirName ) => ipcRenderer.send(ipc.LIST_DIRECTORY_FILES, dirName);
+    getDirectoryFilesList = ( dirName = '/' ) => {
+        this.props.currentPathAction(dirName);
+        this.setState({ connectingFtp: true });
+        ipcRenderer.send(ipc.LIST_DIRECTORY_FILES, dirName);
+    };
 
     downloadFile = () => console.log('download file');
 
@@ -56,10 +58,7 @@ class FtpBoss extends Component {
                         labelPosition='right'
                         icon='linkify'
                         content='CONNECT'
-                        onClick={() => {
-                            this.setState({ connectingFtp: true });
-                            this.getDirectoryFilesList();
-                        }}
+                        onClick={() => this.getDirectoryFilesList()}
                     />
 
                     <Button
@@ -90,7 +89,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    testAction: () => dispatch(testAction())
+    currentPathAction:  path  => dispatch(currentPath(path))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FtpBoss);
