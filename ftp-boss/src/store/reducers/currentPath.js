@@ -1,10 +1,10 @@
 /**
- * Created by juliusz.jakubowski@gmail.com on 08.10.18.
+ * Created by juliusz.jakubowski@gmail.com on 10.10.18.
  */
 
 export default ( state = {}, action ) => {
     switch (action.type) {
-        case 'SERVER_SETTINGS_ACTION':
+        case 'CURRENT_PATH_ACTION':
             return {
                 result: action.payload
             };

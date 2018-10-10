@@ -4,10 +4,10 @@
 
 import { combineReducers } from 'redux';
 
-import test from './reducers/test';
 import serverSettings from './reducers/serverSettings';
+import currentPath from './reducers/currentPath';
 
 export default combineReducers({
-    test,
-    serverSettings
+    serverSettings,
+    currentPath
 });
