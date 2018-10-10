@@ -10,8 +10,7 @@ import * as serviceWorker from './serviceWorker';
 
 import store, { history } from './store/store';
 
-import App from './components/App';
-// import Settings from './components/Settings';
+import FtpBoss from './components/FtpBoss';
 import FtpForm from './components/FtpForm';
 
 const target = document.querySelector('#root');
@@ -20,9 +19,8 @@ render(
     <Provider store={store}>
         <ConnectedRouter history={history}>
             <Switch>
-                {/*<Route exact path="/settings" component={Settings} />*/}
                 <Route exact path="/ftp" component={FtpForm} />
-                <Route path="/" component={App} />
+                <Route path="/" component={FtpBoss} />
             </Switch>
         </ConnectedRouter>
     </Provider>,
