@@ -3,7 +3,7 @@
  */
 
 
-export const serverSettingsAction = ( settings ) => dispatch => {
+export const serverSettings = ( settings ) => dispatch => {
     dispatch({
         type: 'SERVER_SETTINGS_ACTION',
         payload: settings
