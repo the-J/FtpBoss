@@ -3,14 +3,13 @@
  */
 
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Button, Container } from 'semantic-ui-react';
-
+import { Divider } from 'semantic-ui-react';
 import { colors } from '../settings';
 
 import FilesList from './FilesList';
+import { TopButtons } from './TopButtons';
 
 import { currentPath } from '../store/actions/currentPath';
 
@@ -29,56 +28,69 @@ class FtpBoss extends Component {
     }
 
     componentDidMount() {
-        ipcRenderer.on(ipc.SEND_TO_RENDERER, this.directoryList);
+        ipcRenderer.on(ipc.SEND_TO_RENDERER, this.setDirectoryFilesList);
     }
 
     componentWillUnmount() {
-        ipcRenderer.removeListener(ipc.SEND_TO_RENDERER, this.directoryList);
+        ipcRenderer.removeListener(ipc.SEND_TO_RENDERER, this.setDirectoryFilesList);
     }
 
-    getDirectoryFilesList = ( dirName = '/' ) => {
+    goOneDirectoryBack = () => {
+        let currentPath = this.props.currentPath.result;
+
+        if (currentPath !== '/') {
+            // currentPath = currentPath.lastIndexOf('/');
+            console.log(currentPath.lastIndexOf('/'));
+            currentPath = currentPath.substr(0, currentPath.lastIndexOf("/"))
+            // currentPath.splice(currentPath.length, 1);
+        }
+
+        console.log({ currentPath });
+        this.goToDirectory(currentPath);
+    };
+
+    goToDirectory = ( dirName = '/' ) => {
+        const currentPath = this.props.currentPath.result;
+        if (dirName !== '/' && dirName !== currentPath) {
+            dirName = currentPath.concat(dirName + '/');
+        }
+
         this.props.currentPathAction(dirName);
         this.setState({ connectingFtp: true });
+        this.getDirectoryFilesList(dirName);
+    };
+
+    getDirectoryFilesList = ( dirName = '/' ) => {
         ipcRenderer.send(ipc.LIST_DIRECTORY_FILES, dirName);
     };
 
-    downloadFile = () => console.log('download file');
+    setDirectoryFilesList = ( event, list ) => this.setState({ list, connectingFtp: false });
 
-    directoryList = ( event, list ) => this.setState({ list, connectingFtp: false });
+    downloadFile = () => console.log('download file');
 
     render() {
         const { list, connectingFtp } = this.state;
+        const { currentPath } = this.props;
 
         return (
             <FtpBossStyles>
-                <Container>
-                    <Button
-                        basic
-                        loading={connectingFtp}
-                        labelPosition='right'
-                        icon='linkify'
-                        content='CONNECT'
-                        onClick={() => this.getDirectoryFilesList()}
-                    />
+                <TopButtons
+                    connectingFtp={connectingFtp}
+                    currentPath={currentPath}
+                    goToDirectory={() => this.goToDirectory()}
+                    goOneDirectoryBack={() => this.goOneDirectoryBack()}
+                />
 
-                    <Button
-                        basic
-                        as={Link}
-                        to='/ftp'
-                        labelPosition='right'
-                        icon='setting'
-                        content='FTP SETTINGS'
-                    />
+                <Divider />
 
-                    {
-                        list && !!list.length &&
-                        <FilesList
-                            list={list}
-                            goToDirectory={dir => this.getDirectoryFilesList(dir)}
-                            download={fileName => this.downloadFile(fileName)}
-                        />
-                    }
-                </Container>
+                {
+                    list && !!list.length &&
+                    <FilesList
+                        list={list}
+                        goToDirectory={dir => this.goToDirectory(dir)}
+                        download={fileName => this.downloadFile(fileName)}
+                    />
+                }
             </FtpBossStyles>
         );
     }
@@ -89,12 +101,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    currentPathAction:  path  => dispatch(currentPath(path))
+    currentPathAction: path => dispatch(currentPath(path))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FtpBoss);
 
 const FtpBossStyles = styled.div`
   margin-top:  20px;
-  background: ${colors.background}
+  background: ${colors.background};
 `;
