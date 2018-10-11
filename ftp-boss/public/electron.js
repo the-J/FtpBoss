@@ -89,27 +89,14 @@ function serverCredentials() {
  * returns 'ls /' if no path specified
  */
 function listDirectoryFiles( dirPath ) {
-    if (!dirPath) dirPath = '';
-
-    // @todo validate path
-    console.log('listDirectoryFiles', { dirPath });
-
     const ftp = new EasyFtp();
     ftp.connect(serverCredentials());
 
     ftp.on('open', () => {
-        if (dirPath) {
-            ftp.ls('./' + dirPath, ( err, list ) => {
-                if (err) console.log(err);
-                else mainWindow.send(ipc.SEND_TO_RENDERER, list);
-            });
-        }
-        else {
-            ftp.ls('/', ( err, list ) => {
-                if (err) console.log(err);
-                else mainWindow.send(ipc.SEND_TO_RENDERER, list);
-            });
-        }
+        ftp.ls(dirPath, ( err, list ) => {
+            if (err) console.log(err);
+            else mainWindow.send(ipc.SEND_TO_RENDERER, list);
+        });
 
         ftp.close();
     });
