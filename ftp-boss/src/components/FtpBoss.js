@@ -8,10 +8,10 @@ import styled from 'styled-components';
 import { Divider } from 'semantic-ui-react';
 import { colors } from '../settings';
 
-import FilesList from './FilesList';
-import { TopButtons } from './TopButtons';
-
 import { currentPath } from '../store/actions/currentPath';
+
+import { TopButtons } from './TopButtons';
+import FilesListWrapper from './FilesListWrapper';
 
 const { ipcRenderer, remote } = window.require('electron');
 
@@ -88,14 +88,11 @@ class FtpBoss extends Component {
 
                 <Divider />
 
-                {
-                    list && !!list.length &&
-                    <FilesList
-                        list={list}
-                        goToDirectory={dir => this.goToDirectory(dir)}
-                        download={fileName => this.downloadFile(fileName)}
-                    />
-                }
+                <FilesListWrapper
+                    list={list}
+                    goToDirectory={dir => this.goToDirectory(dir)}
+                    download={fileName => this.downloadFile(fileName)}
+                />
             </FtpBossStyles>
         );
     }
