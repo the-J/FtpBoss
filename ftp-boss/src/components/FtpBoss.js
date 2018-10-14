@@ -35,24 +35,30 @@ class FtpBoss extends Component {
         ipcRenderer.removeListener(ipc.SEND_TO_RENDERER, this.setDirectoryFilesList);
     }
 
-    goOneDirectoryBack = () => {
-        let currentPath = this.props.currentPath.result;
-
-        if (currentPath !== '/') {
-            // currentPath = currentPath.lastIndexOf('/');
-            console.log(currentPath.lastIndexOf('/'));
-            currentPath = currentPath.substr(0, currentPath.lastIndexOf("/"))
-            // currentPath.splice(currentPath.length, 1);
+    /**
+     *
+     * @param {String} [dirName]
+     * @param {String} [direction='forward'] - 'home', backwards'
+     */
+    goToDirectory = ( dirName = '', direction = 'forward' ) => {
+        if (direction !== 'forward' && direction !== 'backwards' && direction !== 'home') {
+            return console.error('set error for wrong directory direction');
         }
 
-        console.log({ currentPath });
-        this.goToDirectory(currentPath);
-    };
+        let currentPath = this.props.currentPath.result;
 
-    goToDirectory = ( dirName = '/' ) => {
-        const currentPath = this.props.currentPath.result;
-        if (dirName !== '/' && dirName !== currentPath) {
-            dirName = currentPath.concat(dirName + '/');
+        if (currentPath) {
+            if (direction === 'forward') {
+                dirName = currentPath === dirName
+                    ? dirName
+                    : currentPath + '/' + dirName;
+            }
+            else if (direction === 'backwards') {
+                dirName = currentPath.slice(0, currentPath.match(/\/(?!.*\/)/).index);
+            }
+            else if (direction === 'home') {
+                dirName = '';
+            }
         }
 
         this.props.currentPathAction(dirName);
@@ -77,8 +83,7 @@ class FtpBoss extends Component {
                 <TopButtons
                     connectingFtp={connectingFtp}
                     currentPath={currentPath}
-                    goToDirectory={() => this.goToDirectory()}
-                    goOneDirectoryBack={() => this.goOneDirectoryBack()}
+                    goToDirectory={( dirName, direction ) => this.goToDirectory(dirName, direction)}
                 />
 
                 <Divider />
