@@ -20,11 +20,17 @@ export const TopButtons = ( props ) => (
         {
             props.currentPath.result &&
             props.currentPath.result !== '/' &&
-            <Button
-                basic
-                icon='backward'
-                onClick={() => props.goOneDirectoryBack()}
-            />
+            <Button.Group basic>
+                <Button
+                    icon='backward'
+                    onClick={() => props.goToDirectory(undefined, 'backwards')}
+                />
+
+                <Button
+                    icon='home'
+                    onClick={() => props.goToDirectory(undefined, 'home')}
+                />
+            </Button.Group>
         }
 
         <Button
