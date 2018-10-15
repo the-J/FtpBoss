@@ -6,13 +6,16 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Button, Container, Form, Header } from 'semantic-ui-react';
-
 import { push } from 'connected-react-router';
 import { bindActionCreators } from 'redux';
 
 import { colors } from '../settings';
 
-import { serverSettings } from '../store/actions/serverSettings';
+import { setSettings } from '../store/actions/setSettings';
+
+const { ipcRenderer, remote } = window.require('electron');
+
+const ipc = remote.getGlobal('ipc');
 
 class FtpForm extends Component {
     constructor() {
@@ -54,8 +57,9 @@ class FtpForm extends Component {
 
     handleSubmit = () => {
         if (!this.validateData()) {
+            this.props.setSettingsAction({ serverParams: this.state.serverParams });
+            ipcRenderer.send(ipc.SET_SETTINGS, { serverParams: this.state.serverParams });
             this.props.changePage();
-            this.props.serverSettings(this.state.serverParams);
         }
     };
 
@@ -69,7 +73,7 @@ class FtpForm extends Component {
                         Server credentials
                     </Header>
 
-                    <Form>
+                    <Form onSubmit={() => this.handleSubmit()}>
                         <Form.Group widths='equal'>
                             <Form.Field inline required>
                                 <label>user: </label>
@@ -142,6 +146,7 @@ class FtpForm extends Component {
                         </Button>
 
                         <Button
+                            type='button'
                             floated='right'
                             basic
                             color='green'
@@ -158,7 +163,7 @@ class FtpForm extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     changePage: () => push('/'),
-    serverSettings: ( serverParams ) => serverSettings(serverParams)
+    setSettingsAction: serverParams => setSettings({ serverParams: serverParams })
 }, dispatch);
 
 export default connect(
