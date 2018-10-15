@@ -11,7 +11,7 @@ const {
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
-const settings = require('electron-settings');
+const electronSettings = require('electron-settings');
 const EasyFtp = require('easy-ftp');
 
 const defaultCredentials = require('./credentials');
@@ -48,7 +48,9 @@ function createWindow() {
     mainWindow.on('closed', () => mainWindow = null);
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+    createWindow();
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -66,15 +68,21 @@ app.on('activate', () => {
  * Defining global ipcMain / ipcRenderer commands
  */
 global.ipc = {
-    SEND_TO_RENDERER: 'send-to-renderer',
-    LIST_DIRECTORY_FILES: 'list-directory-files'
+    SEND_LIST: 'send-directory-list',
+    SEND_SERVER_PARAMS: 'send-server-credentials',
+    LIST_DIRECTORY_FILES: 'list-directory-files',
+    SET_SETTINGS: 'set-settings'
 };
 
 /**
- * @todo electron-settings
+ * @todo electron-settings - it's still dev version
  * @returns {{host, user, password, type}|*}
  */
 function serverCredentials() {
+    const serverParams = electronSettings.get('serverParams');
+
+    // if (serverParams) return serverParams;
+    // else
     return defaultCredentials;
 }
 
@@ -95,11 +103,27 @@ function listDirectoryFiles( dirPath ) {
     ftp.on('open', () => {
         ftp.ls(dirPath, ( err, list ) => {
             if (err) console.log(err);
-            else mainWindow.send(ipc.SEND_TO_RENDERER, list);
+            else mainWindow.send(ipc.SEND_LIST, list);
         });
 
         ftp.close();
     });
 }
 
+/**
+ *
+ * @param {Object} settings
+ * @param {String} settings.settingsKey
+ * @param {Object} settings.values
+ */
+function setSettings( settings ) {
+    const settingsKey = Object.keys(settings)[ 0 ];
+    const settingsValues = settings[ settingsKey ];
+
+    electronSettings.set(settingsKey, settingsValues);
+    // @todo  way for handling diff messages
+    mainWindow.send(ipc.SEND_SERVER_PARAMS);
+}
+
 ipcMain.on(ipc.LIST_DIRECTORY_FILES, ( event, arg ) => listDirectoryFiles(arg));
+ipcMain.on(ipc.SET_SETTINGS, ( event, arg ) => setSettings(arg));
