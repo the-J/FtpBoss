@@ -28,12 +28,22 @@ class FtpBoss extends Component {
     }
 
     componentDidMount() {
-        ipcRenderer.on(ipc.SEND_TO_RENDERER, this.setDirectoryFilesList);
+        ipcRenderer.on(ipc.SEND_LIST, this.setDirectoryFilesList);
+        ipcRenderer.on(ipc.SEND_SERVER_PARAMS, this.settingsPresent);
     }
 
     componentWillUnmount() {
-        ipcRenderer.removeListener(ipc.SEND_TO_RENDERER, this.setDirectoryFilesList);
+        ipcRenderer.removeListener(ipc.SEND_LIST, this.setDirectoryFilesList);
+        ipcRenderer.removeListener(ipc.SEND_SERVER_PARAMS, this.settingsPresent);
     }
+
+    setDirectoryFilesList = ( event, list ) => this.setState({ list, connectingFtp: false });
+
+    settingsPresent = () => this.goToDirectory();
+
+    getDirectoryFilesList = ( dirName = '/' ) => ipcRenderer.send(ipc.LIST_DIRECTORY_FILES, dirName);
+
+    downloadFile = () => console.log('download file');
 
     /**
      *
@@ -71,14 +81,6 @@ class FtpBoss extends Component {
         this.setState({ connectingFtp: true });
         this.getDirectoryFilesList(dirName);
     };
-
-    getDirectoryFilesList = ( dirName = '/' ) => {
-        ipcRenderer.send(ipc.LIST_DIRECTORY_FILES, dirName);
-    };
-
-    setDirectoryFilesList = ( event, list ) => this.setState({ list, connectingFtp: false });
-
-    downloadFile = () => console.log('download file');
 
     render() {
         const { list, connectingFtp } = this.state;
