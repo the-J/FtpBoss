@@ -6,8 +6,10 @@ import { combineReducers } from 'redux';
 
 import serverSettings from './reducers/serverSettings';
 import currentPath from './reducers/currentPath';
+import setSettings from './reducers/setSettings';
 
 export default combineReducers({
     serverSettings,
-    currentPath
+    currentPath,
+    setSettings
 });
