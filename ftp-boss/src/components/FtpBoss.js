@@ -54,7 +54,13 @@ class FtpBoss extends Component {
                     : currentPath + '/' + dirName;
             }
             else if (direction === 'backwards') {
-                dirName = currentPath.slice(0, currentPath.match(/\/(?!.*\/)/).index);
+                const slashIndex = currentPath.match(/\/(?!.*\/)/)
+                    ? currentPath.match(/\/(?!.*\/)/).index
+                    : undefined;
+
+                if (slashIndex) {
+                    dirName = currentPath.slice(0, currentPath.match(/\/(?!.*\/)/).index);
+                }
             }
             else if (direction === 'home') {
                 dirName = '';
@@ -89,6 +95,7 @@ class FtpBoss extends Component {
                 <Divider />
 
                 <FilesListWrapper
+                    currentPath={currentPath}
                     list={list}
                     goToDirectory={dir => this.goToDirectory(dir)}
                     download={fileName => this.downloadFile(fileName)}
