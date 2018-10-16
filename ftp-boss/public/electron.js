@@ -61,6 +61,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
     if (mainWindow === null) {
         createWindow();
+        mainWindow.send(ipc.SEND_SERVER_PARAMS);
     }
 });
 
