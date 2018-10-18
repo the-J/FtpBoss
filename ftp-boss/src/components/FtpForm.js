@@ -57,8 +57,8 @@ class FtpForm extends Component {
 
     handleSubmit = () => {
         if (!this.validateData()) {
-            this.props.setSettingsAction({ serverParams: this.state.serverParams });
-            ipcRenderer.send(ipc.SET_SETTINGS, { serverParams: this.state.serverParams });
+            this.props.setSettingsAction(this.state.serverParams);
+            ipcRenderer.send(ipc.SET_SETTINGS, this.state.serverParams);
             this.props.changePage();
         }
     };
@@ -163,7 +163,7 @@ class FtpForm extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     changePage: () => push('/'),
-    setSettingsAction: serverParams => setSettings({ serverParams: serverParams })
+    setSettingsAction: serverParams => setSettings({serverParams: serverParams})
 }, dispatch);
 
 export default connect(
