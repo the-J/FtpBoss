@@ -43,6 +43,7 @@ function createWindow() {
 
     mainWindow.webContents.on('did-finish-load', function () {
         mainWindow.show();
+        getSettings();
     });
 
     mainWindow.on('closed', () => mainWindow = null);
@@ -72,7 +73,9 @@ global.ipc = {
     SEND_LIST: 'send-directory-list',
     SEND_SERVER_PARAMS: 'send-server-credentials',
     LIST_DIRECTORY_FILES: 'list-directory-files',
-    SET_SETTINGS: 'set-settings'
+    SET_SETTINGS: 'set-settings',
+    GET_SETTINGS: 'get-settings',
+    SEND_SETTINGS: 'send-settings'
 };
 
 /**
@@ -122,9 +125,17 @@ function setSettings( settings ) {
     const settingsValues = settings[ settingsKey ];
 
     electronSettings.set(settingsKey, settingsValues);
+
     // @todo  way for handling diff messages
     mainWindow.send(ipc.SEND_SERVER_PARAMS);
 }
 
+function getSettings() {
+    console.log('get settings');
+    const settings = electronSettings.getAll();
+    mainWindow.send(ipc.SEND_SETTINGS, settings);
+}
+
 ipcMain.on(ipc.LIST_DIRECTORY_FILES, ( event, arg ) => listDirectoryFiles(arg));
 ipcMain.on(ipc.SET_SETTINGS, ( event, arg ) => setSettings(arg));
+ipcMain.on(ipc.GET_SETTINGS, ( event, arg ) => getSettings(arg));
