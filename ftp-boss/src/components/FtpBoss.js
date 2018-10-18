@@ -96,9 +96,9 @@ class FtpBoss extends Component {
                     goToDirectory={( dirName, direction ) => this.goToDirectory(dirName, direction)}
                 />
 
-                <pre>
-                    {JSON.stringify(this.props, null, '   ')}
-                </pre>
+                {/*<pre>*/}
+                    {/*{JSON.stringify(this.props, null, '   ')}*/}
+                {/*</pre>*/}
                 <Divider />
 
                 <FilesListWrapper
