@@ -30,11 +30,13 @@ class FtpBoss extends Component {
     componentDidMount() {
         ipcRenderer.on(ipc.SEND_LIST, this.setDirectoryFilesList);
         ipcRenderer.on(ipc.SEND_SERVER_PARAMS, this.settingsPresent);
+        ipcRenderer.on(ipc.SEND_SETTINGS, this.settingsPresent);
     }
 
     componentWillUnmount() {
         ipcRenderer.removeListener(ipc.SEND_LIST, this.setDirectoryFilesList);
         ipcRenderer.removeListener(ipc.SEND_SERVER_PARAMS, this.settingsPresent);
+        ipcRenderer.removeListener(ipc.SEND_SETTINGS, this.settingsPresent);
     }
 
     setDirectoryFilesList = ( event, list ) => this.setState({ list, connectingFtp: false });
@@ -94,6 +96,9 @@ class FtpBoss extends Component {
                     goToDirectory={( dirName, direction ) => this.goToDirectory(dirName, direction)}
                 />
 
+                <pre>
+                    {JSON.stringify(this.props, null, '   ')}
+                </pre>
                 <Divider />
 
                 <FilesListWrapper
