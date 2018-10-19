@@ -43,7 +43,7 @@ class FtpBoss extends Component {
 
     settingsPresent = () => this.goToDirectory();
 
-    getDirectoryFilesList = ( dirName = '/' ) => ipcRenderer.send(ipc.LIST_DIRECTORY_FILES, dirName);
+    getDirectoryFilesList = ( dirName = '/' ) => ipcRenderer.send(ipc.GET_DIRECTORY_FILES, dirName);
 
     downloadFile = () => console.log('download file');
 
