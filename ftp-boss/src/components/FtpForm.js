@@ -74,8 +74,8 @@ class FtpForm extends Component {
                     </Header>
 
                     <Form onSubmit={() => this.handleSubmit()}>
-                        <Form.Group widths='equal'>
-                            <Form.Field inline required>
+                        <Form.Group widths={2}>
+                            <Form.Field required>
                                 <label>user: </label>
                                 <Form.Input
                                     type='text'
@@ -86,7 +86,7 @@ class FtpForm extends Component {
                                 />
                             </Form.Field>
 
-                            <Form.Field inline required>
+                            <Form.Field required>
                                 <label>pass: </label>
                                 <Form.Input
                                     type='password'
@@ -98,8 +98,8 @@ class FtpForm extends Component {
                             </Form.Field>
                         </Form.Group>
 
-                        <Form.Group widths='equal'>
-                            <Form.Field inline required>
+                        <Form.Group widths={2}>
+                            <Form.Field required>
                                 <label>host: </label>
                                 <Form.Input
                                     type='text'
@@ -111,7 +111,7 @@ class FtpForm extends Component {
                             </Form.Field>
 
 
-                            <Form.Field inline>
+                            <Form.Field>
                                 <label>port: </label>
                                 <Form.Input
                                     type='number'
@@ -124,18 +124,18 @@ class FtpForm extends Component {
                         </Form.Group>
 
                         <Button
-                            basic
-                            type='default'
+                            type='button'
                             floated='left'
-                            color='black'
-                            onClick={() => this.clearServerParams()}
+                            basic
+                            color='green'
+                            onClick={() => this.handleSubmit()}
                         >
-                            Clear
+                            Save
                         </Button>
 
                         <Button
                             basic
-                            floated='right'
+                            floated='left'
                             color='red'
                             onClick={() => {
                                 this.clearServerParams();
@@ -143,16 +143,6 @@ class FtpForm extends Component {
                             }}
                         >
                             Cancel
-                        </Button>
-
-                        <Button
-                            type='button'
-                            floated='right'
-                            basic
-                            color='green'
-                            onClick={() => this.handleSubmit()}
-                        >
-                            Save
                         </Button>
                     </Form>
                 </Container>
@@ -163,7 +153,7 @@ class FtpForm extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     changePage: () => push('/'),
-    setSettingsAction: serverParams => setSettings({serverParams: serverParams})
+    setSettingsAction: serverParams => setSettings({ serverParams: serverParams })
 }, dispatch);
 
 export default connect(
