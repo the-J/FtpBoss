@@ -85,8 +85,7 @@ global.ipc = {
 function serverCredentials() {
     const serverParams = electronSettings.get('serverParams');
 
-    // if (serverParams) return serverParams;
-    // else
+    if (serverParams) return serverParams;
     return defaultCredentials;
 }
 
