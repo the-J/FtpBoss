@@ -131,9 +131,11 @@ function setSettings( settings ) {
 }
 
 function getSettings() {
-    console.log('get settings');
     const settings = electronSettings.getAll();
-    mainWindow.send(ipc.SEND_SETTINGS, settings);
+
+    if (settings && Object.values(settings).length) {
+        return mainWindow.send(ipc.SEND_SETTINGS, settings);
+    }
 }
 
 ipcMain.on(ipc.SET_SETTINGS, ( event, arg ) => setSettings(arg));
