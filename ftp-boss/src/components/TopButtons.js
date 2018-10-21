@@ -51,7 +51,7 @@ export const TopButtons = props => (
             basic
             floated='right'
             as={Link}
-            to='/ftp'
+            to='/settings'
             labelPosition='right'
             icon='setting'
             content='SETTINGS'
