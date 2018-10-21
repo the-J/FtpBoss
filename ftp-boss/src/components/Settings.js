@@ -57,8 +57,8 @@ class Settings extends Component {
 
     handleSubmit = () => {
         if (!this.validateData()) {
-            this.props.setSettingsAction({ serverParams: this.state.serverParams});
-            ipcRenderer.send(ipc.SET_SETTINGS, this.state.serverParams);
+            this.props.formSetSettings({ serverParams: { ...this.state.serverParams } });
+            ipcRenderer.send(ipc.SET_SETTINGS, { serverParams: { ...this.state.serverParams } });
             this.props.changePage();
         }
     };
@@ -153,7 +153,7 @@ class Settings extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     changePage: () => push('/'),
-    setSettingsAction: serverParams => settings(serverParams)
+    formSetSettings: providedSettings => settings(providedSettings)
 }, dispatch);
 
 export default connect(

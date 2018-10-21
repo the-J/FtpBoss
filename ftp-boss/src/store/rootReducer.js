@@ -5,9 +5,9 @@
 import { combineReducers } from 'redux';
 
 import currentPath from './reducers/currentPath';
-import setSettings from './reducers/setSettings';
+import settings from './reducers/settings';
 
 export default combineReducers({
     currentPath,
-    setSettings
+    settings
 });
