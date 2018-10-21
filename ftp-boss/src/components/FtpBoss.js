@@ -12,8 +12,9 @@ import { colors } from '../settings';
 import { currentPath } from '../store/actions/currentPath';
 import { settings } from '../store/actions/settings';
 
-import { TopButtons } from './TopButtons';
 import FilesListWrapper from './FilesListWrapper';
+import { TopButtons } from './TopButtons';
+import { ModalAddFileOrDirectory } from './ModalAddFileOrDirectory';
 
 const { ipcRenderer, remote } = window.require('electron');
 const ipc = remote.getGlobal('ipc');
@@ -24,7 +25,9 @@ class FtpBoss extends Component {
 
         this.state = {
             list: [],
-            connectingFtp: false
+            connectingFtp: false,
+            showUploadModal: false,
+            type: 'file'
         };
     }
 
@@ -50,6 +53,12 @@ class FtpBoss extends Component {
     settingsPresent = () => this.goToDirectory();
 
     getDirectoryFilesList = ( dirName = '/' ) => ipcRenderer.send(ipc.GET_DIRECTORY_FILES, dirName);
+
+    showHideUploadModal = type => {
+        type
+            ? this.setState({ showUploadModal: !this.state.showUploadModal, type })
+            : this.setState({ showUploadModal: !this.state.showUploadModal });
+    };
 
     downloadFile = () => console.log('download file');
 
@@ -91,15 +100,22 @@ class FtpBoss extends Component {
     };
 
     render() {
-        const { list, connectingFtp } = this.state;
+        const { list, connectingFtp, showUploadModal, type } = this.state;
         const { currentPath } = this.props;
 
         return (
             <FtpBossStyles>
+                <ModalAddFileOrDirectory
+                    type={type}
+                    showUploadModal={showUploadModal}
+                    showHideModal={() => this.showHideUploadModal()}
+                />
+
                 <TopButtons
                     connectingFtp={connectingFtp}
                     currentPath={currentPath}
                     goToDirectory={( dirName, direction ) => this.goToDirectory(dirName, direction)}
+                    uploadModal={type => this.showHideUploadModal(type)}
                 />
 
                 {/*<pre>*/}
