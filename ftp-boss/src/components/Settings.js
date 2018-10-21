@@ -67,7 +67,7 @@ class Settings extends Component {
         const { serverParams, valid } = this.state;
 
         return (
-            <FtpFormStyles>
+            <SettingsStyles>
                 <Container>
                     <Header as='h1'>
                         Server credentials
@@ -146,7 +146,7 @@ class Settings extends Component {
                         </Button>
                     </Form>
                 </Container>
-            </FtpFormStyles>
+            </SettingsStyles>
         );
     }
 }
@@ -161,7 +161,7 @@ export default connect(
     mapDispatchToProps
 )(Settings);
 
-const FtpFormStyles = styled.div`
+const SettingsStyles = styled.div`
   margin-top:  20px;
   background: ${colors.background}
 `;
