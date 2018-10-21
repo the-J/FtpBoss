@@ -72,7 +72,7 @@ app.on('activate', () => {
 global.ipc = {
     SEND_LIST: 'send-directory-list',
     SEND_SERVER_PARAMS: 'send-server-credentials',
-    SEND_SETTINGS: 'send-settings',
+    SEND_SETTINGS_ON_LOAD: 'send-settings',
     GET_DIRECTORY_FILES: 'list-directory-files',
     GET_SETTINGS: 'get-settings',
     SET_SETTINGS: 'set-settings'
@@ -133,7 +133,7 @@ function getSettings() {
     const settings = electronSettings.getAll();
 
     if (settings && Object.values(settings).length) {
-        return mainWindow.send(ipc.SEND_SETTINGS, settings);
+        return mainWindow.send(ipc.SEND_SETTINGS_ON_LOAD, settings);
     }
 }
 

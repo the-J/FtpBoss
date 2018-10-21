@@ -6,15 +6,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Divider } from 'semantic-ui-react';
+
 import { colors } from '../settings';
 
 import { currentPath } from '../store/actions/currentPath';
+import { settings } from '../store/actions/settings';
 
 import { TopButtons } from './TopButtons';
 import FilesListWrapper from './FilesListWrapper';
 
 const { ipcRenderer, remote } = window.require('electron');
-
 const ipc = remote.getGlobal('ipc');
 
 class FtpBoss extends Component {
@@ -30,13 +31,18 @@ class FtpBoss extends Component {
     componentDidMount() {
         ipcRenderer.on(ipc.SEND_LIST, this.setDirectoryFilesList);
         ipcRenderer.on(ipc.SEND_SERVER_PARAMS, this.settingsPresent);
-        ipcRenderer.on(ipc.SEND_SETTINGS, this.settingsPresent);
+        ipcRenderer.on(ipc.SEND_SETTINGS_ON_LOAD, ( event, serverParams ) => {
+            if (serverParams && Object.values(serverParams).length) {
+                this.props.setSettingsAction(serverParams);
+                this.settingsPresent();
+            }
+        });
     }
 
     componentWillUnmount() {
         ipcRenderer.removeListener(ipc.SEND_LIST, this.setDirectoryFilesList);
         ipcRenderer.removeListener(ipc.SEND_SERVER_PARAMS, this.settingsPresent);
-        ipcRenderer.removeListener(ipc.SEND_SETTINGS, this.settingsPresent);
+        ipcRenderer.removeListener(ipc.SEND_SETTINGS_ON_LOAD, this.settingsPresent);
     }
 
     setDirectoryFilesList = ( event, list ) => this.setState({ list, connectingFtp: false });
@@ -112,12 +118,11 @@ class FtpBoss extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    ...state
-});
+const mapStateToProps = state => ({ ...state });
 
 const mapDispatchToProps = dispatch => ({
-    currentPathAction: path => dispatch(currentPath(path))
+    currentPathAction: path => dispatch(currentPath(path)),
+    setSettingsAction: serverParams => dispatch(settings(serverParams))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FtpBoss);
