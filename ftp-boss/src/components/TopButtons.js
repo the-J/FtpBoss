@@ -3,10 +3,10 @@
  */
 
 import React from 'react';
-import { Button, Container } from 'semantic-ui-react';
+import { Button, Container, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
-export const TopButtons = ( props ) => (
+export const TopButtons = props => (
     <Container columnts='equal'>
         <Button
             basic
@@ -30,6 +30,20 @@ export const TopButtons = ( props ) => (
                     icon='home'
                     onClick={() => props.goToDirectory(undefined, 'home')}
                 />
+
+                <Button
+                    icon='plus'
+                    onClick={() => props.uploadModal('file')}
+                />
+
+                <Button
+                    onClick={() => props.uploadModal('dir')}
+                >
+                    <Icon.Group>
+                        <Icon name='folder' size='small' />
+                        <Icon corner name='add' />
+                    </Icon.Group>
+                </Button>
             </Button.Group>
         }
 
