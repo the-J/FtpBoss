@@ -132,7 +132,6 @@ function createFileOrDirectory( dirPath, dirName, type ) {
     });
 }
 
-checking webhook in github - seames that git is failing
 function removeFileOrDirectory( dirPath, dirName, type ) {
     const ftp = new EasyFtp();
     ftp.connect(serverCredentials());
