@@ -113,7 +113,7 @@ function listDirectoryFiles( dirPath ) {
     });
 }
 
-function createFileOrDirecoty( dirPath, dirName, type ) {
+function createFileOrDirectory( dirPath, dirName, type ) {
     const ftp = new EasyFtp();
     ftp.connect(serverCredentials());
 
@@ -128,7 +128,26 @@ function createFileOrDirecoty( dirPath, dirName, type ) {
                 conole.log('creating di failed', err)
             })
         }
-        else console.log('bip bop nop so option')
+        else console.log('bip bop nop so option, \'create\'')
+    });
+}
+
+function removeFileOrDirectory( dirPath, dirName, type ) {
+    const ftp = new EasyFtp();
+    ftp.connect(serverCredentials());
+
+    ftp.on('open', () => {
+
+        // @todo handling err
+        if(type === 'file') {
+
+        }
+        else if (type === 'dir') {
+            ftp.rm('/' + dirPath + '/' + dirName, err => {
+                conole.log('removing di failed', err)
+            })
+        }
+        else console.log('bip bop nop so option, \'remove\'')
     });
 }
 
