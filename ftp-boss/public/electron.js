@@ -113,6 +113,25 @@ function listDirectoryFiles( dirPath ) {
     });
 }
 
+function createFileOrDirecoty( dirPath, dirName, type ) {
+    const ftp = new EasyFtp();
+    ftp.connect(serverCredentials());
+
+    ftp.on('open', () => {
+
+        // @todo handling err
+        if(type === 'file') {
+
+        }
+        else if (type === 'dir') {
+            ftp.mkdir('/' + dirPath + '/' + dirName, err => {
+                conole.log('creating di failed', err)
+            })
+        }
+        else console.log('bip bop nop so option')
+    });
+}
+
 /**
  *
  * @param {Object} settings
