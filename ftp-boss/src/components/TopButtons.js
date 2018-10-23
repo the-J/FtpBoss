@@ -32,9 +32,13 @@ export const TopButtons = props => (
                 />
 
                 <Button
-                    icon='plus'
                     onClick={() => props.uploadModal('file')}
-                />
+                >
+                    <Icon.Group>
+                        <Icon name='file' size='small' />
+                        <Icon corner name='add' />
+                    </Icon.Group>
+                </Button>
 
                 <Button
                     onClick={() => props.uploadModal('dir')}
