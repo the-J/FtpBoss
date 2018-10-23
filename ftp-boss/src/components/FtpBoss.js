@@ -13,8 +13,8 @@ import { currentPath } from '../store/actions/currentPath';
 import { settings } from '../store/actions/settings';
 
 import FilesListWrapper from './FilesListWrapper';
+import ModalAddFileOrDirectory from './ModalAddFileOrDirectory';
 import { TopButtons } from './TopButtons';
-import { ModalAddFileOrDirectory } from './ModalAddFileOrDirectory';
 
 const { ipcRenderer, remote } = window.require('electron');
 const ipc = remote.getGlobal('ipc');
