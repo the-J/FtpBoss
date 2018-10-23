@@ -1,43 +1,108 @@
 /**
  * Created by juliusz.jakubowski@gmail.com on 19.10.18.
  */
-import React, { Component } from 'react';
-import { Modal } from 'semantic-ui-react';
+import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
+import connect from 'react-redux/es/connect/connect';
+import { Button, Header, Icon, Input, Modal } from 'semantic-ui-react';
 
 
 class ModalAddFileOrDirectory extends Component {
-    constructor( props ) {
-        super(props);
+    static propTypes = {
+        showHideModal: PropTypes.func.isRequired,
+        refreshFiles: PropTypes.func.isRequired,
+        showUploadModal: PropTypes.bool.isRequired,
+        type: PropTypes.string.isRequired
+    };
+
+    constructor() {
+        super();
+
+        this.state = {
+            newDirectoryName: ''
+        };
 
     }
 
-    render() {
-        const { showUploadModal, showHideModal } = this.props;
-
+    modalTypeFile = () => {
         return (
             <Modal
                 basic
                 size='small'
-                open={showUploadModal}
-                onClose={() => showHideModal()}
+                open={this.props.showUploadModal}
+                onClose={() => this.props.showHideModal()}
             >
-                {/*<Header icon='archive' content='Archive Old Messages' />*/}
-                {/*<Modal.Content>*/}
-                {/*<p>*/}
-                {/*Your inbox is getting full, would you like us to enable automatic archiving of old messages?*/}
-                {/*</p>*/}
-                {/*</Modal.Content>*/}
-                {/*<Modal.Actions>*/}
-                {/*<Button basic color='red' inverted>*/}
-                {/*<Icon name='remove' /> No*/}
-                {/*</Button>*/}
-                {/*<Button color='green' inverted>*/}
-                {/*<Icon name='checkmark' /> Yes*/}
-                {/*</Button>*/}
-                {/*</Modal.Actions>*/}
+                <Header content='Work in progress' />
             </Modal>
+        );
+    };
+
+    newDirectoryName = e => {
+        const value = e.target.value;
+        let newDirectoryName = this.state.newDirectoryName;
+
+        if (value) newDirectoryName = value;
+        else newDirectoryName = '';
+
+        newDirectoryName.trim();
+        this.setState({ newDirectoryName });
+    };
+
+    createDirectory = () => {
+        const { showHideModal, refreshFiles, currentPath } = this.props;
+
+        this.setState({ newDirectoryName: '' });
+
+        showHideModal();
+        refreshFiles(currentPath.result);
+    };
+
+    render() {
+        const { showHideModal, refreshFiles, showUploadModal, type, currentPath } = this.props;
+        const { newDirectoryName } = this.state;
+
+        return (
+            <Fragment>
+                {
+                    type === 'file'
+                        ? this.modalTypeFile()
+                        :
+                        (
+                            <Modal basic size='small' open={showUploadModal} onClose={() => showHideModal()}>
+                                <Header icon='folder' content='Create directory ' />
+
+                                <Modal.Content>
+                                    <h4>Create directory in {currentPath.result}</h4>
+                                    <Input
+                                        fluid
+                                        type='text'
+                                        placeholder='Directory name'
+                                        value={newDirectoryName}
+                                        onChange={e => this.newDirectoryName(e)}
+                                    />
+                                </Modal.Content>
+
+                                <Modal.Actions>
+                                    <Button color='red' inverted onClick={() => showHideModal()}>
+                                        <Icon name='remove' /> Abort
+                                    </Button>
+
+                                    <Button
+                                        color='green'
+                                        inverted
+                                        onClick={() => this.createDirectory()}
+                                    >
+                                        <Icon name='checkmark' /> Create
+                                    </Button>
+                                </Modal.Actions>
+                            </Modal>
+                        )
+                }
+            </Fragment>
         );
     }
 }
 
-export default ModalAddFileOrDirectory;
+const mapStateToProps = state => ({ ...state });
+
+export default connect(mapStateToProps)(ModalAddFileOrDirectory);
