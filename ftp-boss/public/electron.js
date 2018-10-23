@@ -75,7 +75,11 @@ global.ipc = {
     SEND_SETTINGS_ON_LOAD: 'send-settings',
     GET_DIRECTORY_FILES: 'list-directory-files',
     GET_SETTINGS: 'get-settings',
-    SET_SETTINGS: 'set-settings'
+    SET_SETTINGS: 'set-settings',
+    CREATE_DIRECTORY: 'create-directory',
+    CREATE_DIRECTORY_CB: 'create-directory-callback',
+    REMOVE_DIRECTORY: 'remove-directory',
+    REMOVE_DIRECTORY_CB: 'remove-directory-callback'
 };
 
 /**
@@ -178,3 +182,5 @@ function getSettings() {
 ipcMain.on(ipc.SET_SETTINGS, ( event, arg ) => setSettings(arg));
 ipcMain.on(ipc.GET_DIRECTORY_FILES, ( event, arg ) => listDirectoryFiles(arg));
 ipcMain.on(ipc.GET_SETTINGS, ( event, arg ) => getSettings(arg));
+ipcMain.on(ipc.CREATE_DIRECTORY, ( event, arg ) => createFileOrDirectory(arg));
+ipcMain.on(ipc.REMOVE_DIRECTORY, ( event, arg ) => removeFileOrDirectory(arg));
