@@ -109,6 +109,7 @@ class FtpBoss extends Component {
                     type={type}
                     showUploadModal={showUploadModal}
                     showHideModal={() => this.showHideUploadModal()}
+                    refreshFiles={currentDirectory => this.goToDirectory(currentDirectory)}
                 />
 
                 <TopButtons
@@ -119,7 +120,7 @@ class FtpBoss extends Component {
                 />
 
                 {/*<pre>*/}
-                    {/*{JSON.stringify(this.props, null, '   ')}*/}
+                {/*{JSON.stringify(this.props, null, '   ')}*/}
                 {/*</pre>*/}
                 <Divider />
 
