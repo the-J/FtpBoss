@@ -117,22 +117,19 @@ function listDirectoryFiles( dirPath ) {
     });
 }
 
-function createFileOrDirectory( dirPath, dirName, type ) {
+function createDirectory( arg ) {
     const ftp = new EasyFtp();
     ftp.connect(serverCredentials());
+
+    const { dirPath, dirName } = { ...arg };
 
     ftp.on('open', () => {
 
         // @todo handling err
-        if(type === 'file') {
-
-        }
-        else if (type === 'dir') {
-            ftp.mkdir('/' + dirPath + '/' + dirName, err => {
-                conole.log('creating di failed', err)
-            })
-        }
-        else console.log('bip bop nop so option, \'create\'')
+        ftp.mkdir(dirPath + '/' + dirName, err => {
+            if (err) return conole.log('creating di failed', err);
+            else mainWindow.send(ipc.CREATE_DIRECTORY_CB);
+        });
     });
 }
 
@@ -143,15 +140,15 @@ function removeFileOrDirectory( dirPath, dirName, type ) {
     ftp.on('open', () => {
 
         // @todo handling err
-        if(type === 'file') {
+        if (type === 'file') {
 
         }
         else if (type === 'dir') {
             ftp.rm('/' + dirPath + '/' + dirName, err => {
-                conole.log('removing di failed', err)
-            })
+                conole.log('removing di failed', err);
+            });
         }
-        else console.log('bip bop nop so option, \'remove\'')
+        else console.log('bip bop nop so option, \'remove\'');
     });
 }
 
@@ -182,5 +179,5 @@ function getSettings() {
 ipcMain.on(ipc.SET_SETTINGS, ( event, arg ) => setSettings(arg));
 ipcMain.on(ipc.GET_DIRECTORY_FILES, ( event, arg ) => listDirectoryFiles(arg));
 ipcMain.on(ipc.GET_SETTINGS, ( event, arg ) => getSettings(arg));
-ipcMain.on(ipc.CREATE_DIRECTORY, ( event, arg ) => createFileOrDirectory(arg));
+ipcMain.on(ipc.CREATE_DIRECTORY, ( event, arg ) => createDirectory(arg));
 ipcMain.on(ipc.REMOVE_DIRECTORY, ( event, arg ) => removeFileOrDirectory(arg));

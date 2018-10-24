@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import connect from 'react-redux/es/connect/connect';
 import { Button, Header, Icon, Input, Modal } from 'semantic-ui-react';
 
+const { ipcRenderer, remote } = window.require('electron');
+const ipc = remote.getGlobal('ipc');
 
 class ModalAddFileOrDirectory extends Component {
     static propTypes = {
@@ -23,6 +25,19 @@ class ModalAddFileOrDirectory extends Component {
         };
 
     }
+
+    componentDidMount() {
+        ipcRenderer.on(ipc.CREATE_DIRECTORY_CB, this.refreshFiles);
+    }
+
+    componentWillUnmount() {
+        ipcRenderer.removeListener(ipc.CREATE_DIRECTORY_CB, this.refreshFiles);
+    }
+
+    refreshFiles = () => {
+        const { refreshFiles, currentPath } = this.props;
+        refreshFiles(currentPath.result);
+    };
 
     modalTypeFile = () => {
         return (
@@ -49,16 +64,16 @@ class ModalAddFileOrDirectory extends Component {
     };
 
     createDirectory = () => {
-        const { showHideModal, refreshFiles, currentPath } = this.props;
+        const { showHideModal, currentPath } = this.props;
+        const newDirectoryName = this.state.newDirectoryName;
 
+        ipcRenderer.send(ipc.CREATE_DIRECTORY, { dirPath: currentPath.result, dirName: newDirectoryName });
         this.setState({ newDirectoryName: '' });
-
         showHideModal();
-        refreshFiles(currentPath.result);
     };
 
     render() {
-        const { showHideModal, refreshFiles, showUploadModal, type, currentPath } = this.props;
+        const { showHideModal, showUploadModal, type, currentPath } = this.props;
         const { newDirectoryName } = this.state;
 
         return (
@@ -83,7 +98,11 @@ class ModalAddFileOrDirectory extends Component {
                                 </Modal.Content>
 
                                 <Modal.Actions>
-                                    <Button color='red' inverted onClick={() => showHideModal()}>
+                                    <Button
+                                        color='red'
+                                        inverted
+                                        onClick={() => showHideModal()}
+                                    >
                                         <Icon name='remove' /> Abort
                                     </Button>
 
