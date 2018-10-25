@@ -78,8 +78,8 @@ global.ipc = {
     SET_SETTINGS: 'set-settings',
     CREATE_DIRECTORY: 'create-directory',
     CREATE_DIRECTORY_CB: 'create-directory-callback',
-    REMOVE_DIRECTORY: 'remove-directory',
-    REMOVE_DIRECTORY_CB: 'remove-directory-callback'
+    REMOVE_DIR_OR_FILE: 'remove-directory-or-file',
+    REMOVE_DIR_OR_FILE_CB: 'remove-directory-or-file-callback'
 };
 
 /**
@@ -108,6 +108,8 @@ function listDirectoryFiles( dirPath ) {
     ftp.connect(serverCredentials());
 
     ftp.on('open', () => {
+
+        // @todo handling err
         ftp.ls(dirPath, ( err, list ) => {
             if (err) console.log(err);
             else mainWindow.send(ipc.SEND_LIST, list);
@@ -117,6 +119,7 @@ function listDirectoryFiles( dirPath ) {
     });
 }
 
+// @todo check if directory exists
 function createDirectory( arg ) {
     const ftp = new EasyFtp();
     ftp.connect(serverCredentials());
@@ -133,22 +136,30 @@ function createDirectory( arg ) {
     });
 }
 
-function removeFileOrDirectory( dirPath, dirName, type ) {
+// function uploadFiles( arg ) {
+//     const ftp = new EasyFtp();
+//     ftp.connect(serverCredentials());
+//
+//     const { dirPath, files } = { ...arg };
+//
+//     ftp.on('open', () => {
+//
+//     });
+// }
+
+function removeFileOrDirectory( arg ) {
     const ftp = new EasyFtp();
     ftp.connect(serverCredentials());
+
+    const { dirPath, dirOrFileName } = { ...arg };
 
     ftp.on('open', () => {
 
         // @todo handling err
-        if (type === 'file') {
-
-        }
-        else if (type === 'dir') {
-            ftp.rm('/' + dirPath + '/' + dirName, err => {
-                conole.log('removing di failed', err);
-            });
-        }
-        else console.log('bip bop nop so option, \'remove\'');
+        ftp.rm(dirPath + '/' + dirOrFileName, err => {
+            if (err) conole.log('removing di failed', err);
+            else mainWindow.send(ipc.REMOVE_DIR_OR_FILE_CB);
+        });
     });
 }
 
@@ -180,4 +191,4 @@ ipcMain.on(ipc.SET_SETTINGS, ( event, arg ) => setSettings(arg));
 ipcMain.on(ipc.GET_DIRECTORY_FILES, ( event, arg ) => listDirectoryFiles(arg));
 ipcMain.on(ipc.GET_SETTINGS, ( event, arg ) => getSettings(arg));
 ipcMain.on(ipc.CREATE_DIRECTORY, ( event, arg ) => createDirectory(arg));
-ipcMain.on(ipc.REMOVE_DIRECTORY, ( event, arg ) => removeFileOrDirectory(arg));
+ipcMain.on(ipc.REMOVE_DIR_OR_FILE, ( event, arg ) => removeFileOrDirectory(arg));
