@@ -40,6 +40,8 @@ class FtpBoss extends Component {
                 this.refreshFilesList();
             }
         });
+
+        ipcRenderer.on(ipc.REMOVE_DIR_OR_FILE_CB, this.refreshFilesList);
     }
 
     componentWillUnmount() {
@@ -62,6 +64,11 @@ class FtpBoss extends Component {
     };
 
     downloadFile = () => console.log('download file');
+
+    deleteDirOrFile = name => {
+        this.setState({ connectingFtp: true });
+        ipcRenderer.send(ipc.REMOVE_DIR_OR_FILE, { dirPath: this.props.currentPath.result, dirOrFileName: name });
+    };
 
     /**
      *
@@ -129,6 +136,7 @@ class FtpBoss extends Component {
                     currentPath={currentPath}
                     list={list}
                     goToDirectory={dir => this.goToDirectory(dir)}
+                    deleteDirOrFile={name => this.deleteDirOrFile(name)}
                     download={fileName => this.downloadFile(fileName)}
                 />
             </FtpBossStyles>
