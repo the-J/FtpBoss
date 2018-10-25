@@ -10,7 +10,7 @@ import FilesList from './FilesList';
 
 class FilesListWrapper extends Component {
     render() {
-        const { list, goToDirectory, downloadFile, currentPath } = this.props;
+        const { list, goToDirectory, downloadFile, currentPath, deleteDirOrFile } = this.props;
 
         return (
             <Container>
@@ -21,6 +21,7 @@ class FilesListWrapper extends Component {
                                 list={list}
                                 goToDirectory={dir => goToDirectory(dir)}
                                 download={fileName => downloadFile(fileName)}
+                                delete={name => deleteDirOrFile(name)}
                             /> : 'no files'
                         : 'connect'
                 }
