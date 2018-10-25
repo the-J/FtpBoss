@@ -27,17 +27,12 @@ class ModalAddFileOrDirectory extends Component {
     }
 
     componentDidMount() {
-        ipcRenderer.on(ipc.CREATE_DIRECTORY_CB, this.refreshFiles);
+        ipcRenderer.on(ipc.CREATE_DIRECTORY_CB, this.props.refreshFiles);
     }
 
     componentWillUnmount() {
-        ipcRenderer.removeListener(ipc.CREATE_DIRECTORY_CB, this.refreshFiles);
+        ipcRenderer.removeListener(ipc.CREATE_DIRECTORY_CB, this.props.refreshFiles);
     }
-
-    refreshFiles = () => {
-        const { refreshFiles, currentPath } = this.props;
-        refreshFiles(currentPath.result);
-    };
 
     modalTypeFile = () => {
         return (

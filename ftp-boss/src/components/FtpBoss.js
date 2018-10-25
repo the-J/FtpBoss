@@ -50,7 +50,7 @@ class FtpBoss extends Component {
 
     setDirectoryFilesList = ( event, list ) => this.setState({ list, connectingFtp: false });
 
-    settingsPresent = () => this.goToDirectory();
+    refreshFilesList = () => this.goToDirectory(this.props.currentPath.result);
 
     getDirectoryFilesList = ( dirName = '/' ) => ipcRenderer.send(ipc.GET_DIRECTORY_FILES, dirName);
 
