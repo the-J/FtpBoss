@@ -33,19 +33,20 @@ class FtpBoss extends Component {
 
     componentDidMount() {
         ipcRenderer.on(ipc.SEND_LIST, this.setDirectoryFilesList);
-        ipcRenderer.on(ipc.SEND_SERVER_PARAMS, this.settingsPresent);
+        ipcRenderer.on(ipc.SEND_SERVER_PARAMS, this.refreshFilesList);
         ipcRenderer.on(ipc.SEND_SETTINGS_ON_LOAD, ( event, serverParams ) => {
             if (serverParams && Object.values(serverParams).length) {
                 this.props.setSettingsAction(serverParams);
-                this.settingsPresent();
+                this.refreshFilesList();
             }
         });
     }
 
     componentWillUnmount() {
         ipcRenderer.removeListener(ipc.SEND_LIST, this.setDirectoryFilesList);
-        ipcRenderer.removeListener(ipc.SEND_SERVER_PARAMS, this.settingsPresent);
-        ipcRenderer.removeListener(ipc.SEND_SETTINGS_ON_LOAD, this.settingsPresent);
+        ipcRenderer.removeListener(ipc.SEND_SERVER_PARAMS, this.refreshFilesList);
+        ipcRenderer.removeListener(ipc.SEND_SETTINGS_ON_LOAD, this.refreshFilesList);
+        ipcRenderer.on(ipc.REMOVE_DIR_OR_FILE_CB, this.refreshFilesList);
     }
 
     setDirectoryFilesList = ( event, list ) => this.setState({ list, connectingFtp: false });
@@ -109,7 +110,7 @@ class FtpBoss extends Component {
                     type={type}
                     showUploadModal={showUploadModal}
                     showHideModal={() => this.showHideUploadModal()}
-                    refreshFiles={currentDirectory => this.goToDirectory(currentDirectory)}
+                    refreshFiles={() => this.refreshFilesList()}
                 />
 
                 <TopButtons
