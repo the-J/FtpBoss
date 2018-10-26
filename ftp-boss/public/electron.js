@@ -6,10 +6,10 @@ const {
     app,
     BrowserWindow,
     Menu,
-    ipcMain
+    ipcMain,
+    dialog
 } = require('electron');
 const path = require('path');
-const url = require('url');
 const isDev = require('electron-is-dev');
 const electronSettings = require('electron-settings');
 const EasyFtp = require('easy-ftp');
@@ -79,7 +79,9 @@ global.ipc = {
     CREATE_DIRECTORY: 'create-directory',
     CREATE_DIRECTORY_CB: 'create-directory-callback',
     REMOVE_DIR_OR_FILE: 'remove-directory-or-file',
-    REMOVE_DIR_OR_FILE_CB: 'remove-directory-or-file-callback'
+    REMOVE_DIR_OR_FILE_CB: 'remove-directory-or-file-callback',
+    DOWNLOAD: 'download-from-ftp',
+    DOWNLOAD_CB: 'download-from-ftp-callback'
 };
 
 /**
@@ -130,16 +132,26 @@ function createDirectory( arg ) {
     });
 }
 
-// function uploadFiles( arg ) {
-//     const ftp = new EasyFtp();
-//     ftp.connect(serverCredentials());
-//
-//     const { dirPath, files } = { ...arg };
-//
-//     ftp.on('open', () => {
-//
-//     });
-// }
+function download( arg ) {
+    const ftp = new EasyFtp();
+    ftp.connect(serverCredentials());
+
+    const { dirPath, fileName } = { ...arg };
+
+    const savePath = dialog.showOpenDialog({
+        properties: [ 'openDirectory', 'createDirectory' ]
+    });
+
+    if (typeof savePath[0] !== 'string') return console.log('not string');
+
+    ftp.download(dirPath + '/' + fileName, savePath[0] + '/' + fileName, err => {
+        if (err) console.log('saving file err:', err);
+        else mainWindow.send(ipc.DOWNLOAD_CB);
+
+        ftp.close();
+    });
+
+}
 
 function removeFileOrDirectory( arg ) {
     const ftp = new EasyFtp();
@@ -184,3 +196,4 @@ ipcMain.on(ipc.GET_DIRECTORY_FILES, ( event, arg ) => listDirectoryFiles(arg));
 ipcMain.on(ipc.GET_SETTINGS, ( event, arg ) => getSettings(arg));
 ipcMain.on(ipc.CREATE_DIRECTORY, ( event, arg ) => createDirectory(arg));
 ipcMain.on(ipc.REMOVE_DIR_OR_FILE, ( event, arg ) => removeFileOrDirectory(arg));
+ipcMain.on(ipc.DOWNLOAD, ( event, arg ) => download(arg));
