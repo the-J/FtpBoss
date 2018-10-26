@@ -107,13 +107,9 @@ function listDirectoryFiles( dirPath ) {
     const ftp = new EasyFtp();
     ftp.connect(serverCredentials());
 
-    ftp.on('open', () => {
-
-        // @todo handling err
-        ftp.ls(dirPath, ( err, list ) => {
-            if (err) console.log(err);
-            else mainWindow.send(ipc.SEND_LIST, list);
-        });
+    ftp.ls(dirPath, ( err, list ) => {
+        if (err) console.log(err);
+        else mainWindow.send(ipc.SEND_LIST, list);
 
         ftp.close();
     });
@@ -126,13 +122,11 @@ function createDirectory( arg ) {
 
     const { dirPath, dirName } = { ...arg };
 
-    ftp.on('open', () => {
+    ftp.mkdir(dirPath + '/' + dirName, err => {
+        if (err) return conole.log('creating di failed', err);
+        else mainWindow.send(ipc.CREATE_DIRECTORY_CB);
 
-        // @todo handling err
-        ftp.mkdir(dirPath + '/' + dirName, err => {
-            if (err) return conole.log('creating di failed', err);
-            else mainWindow.send(ipc.CREATE_DIRECTORY_CB);
-        });
+        ftp.close();
     });
 }
 
@@ -153,13 +147,11 @@ function removeFileOrDirectory( arg ) {
 
     const { dirPath, dirOrFileName } = { ...arg };
 
-    ftp.on('open', () => {
+    ftp.rm(dirPath + '/' + dirOrFileName, err => {
+        if (err) conole.log('removing di failed', err);
+        else mainWindow.send(ipc.REMOVE_DIR_OR_FILE_CB);
 
-        // @todo handling err
-        ftp.rm(dirPath + '/' + dirOrFileName, err => {
-            if (err) conole.log('removing di failed', err);
-            else mainWindow.send(ipc.REMOVE_DIR_OR_FILE_CB);
-        });
+        ftp.close();
     });
 }
 
