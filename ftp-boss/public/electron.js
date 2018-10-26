@@ -142,9 +142,11 @@ function download( arg ) {
         properties: [ 'openDirectory', 'createDirectory' ]
     });
 
-    if (typeof savePath[0] !== 'string') return console.log('not string');
+    // @todo handling bad route
+    if (typeof savePath[ 0 ] !== 'string') return console.log('not string');
 
-    ftp.download(dirPath + '/' + fileName, savePath[0] + '/' + fileName, err => {
+    // @todo handling err
+    ftp.download(dirPath + '/' + fileName, savePath[ 0 ] + '/' + fileName, err => {
         if (err) console.log('saving file err:', err);
         else mainWindow.send(ipc.DOWNLOAD_CB);
 
