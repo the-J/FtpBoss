@@ -63,7 +63,7 @@ class FtpBoss extends Component {
             : this.setState({ showUploadModal: !this.state.showUploadModal });
     };
 
-    downloadFile = () => console.log('download file');
+    downloadFile = fileName => ipcRenderer.send(ipc.DOWNLOAD, {dirPath: this.props.currentPath.result, fileName: fileName});
 
     deleteDirOrFile = name => {
         this.setState({ connectingFtp: true });

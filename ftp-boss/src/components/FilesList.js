@@ -48,6 +48,16 @@ const FilesList = props => (
                                         <Table.Cell textAlign='center'>
                                             <Button
                                                 basic
+                                                icon='download'
+                                                className='blue'
+                                                onClick={e => {
+                                                    e.stopPropagation();
+                                                    props.downloadFile(listElement.name);
+                                                }}
+                                            />
+
+                                            <Button
+                                                basic
                                                 icon='trash'
                                                 className='red'
                                                 onClick={e => {
@@ -76,25 +86,25 @@ const FilesList = props => (
                                         </Table.Cell>
 
                                         <Table.Cell textAlign='center'>
-                                                <Button
-                                                    basic
-                                                    icon='download'
-                                                    className='blue'
-                                                    onClick={e => {
-                                                        e.stopPropagation();
-                                                        props.downloadFile(listElement.name);
-                                                    }}
-                                                />
+                                            <Button
+                                                basic
+                                                icon='download'
+                                                className='blue'
+                                                onClick={e => {
+                                                    e.stopPropagation();
+                                                    props.downloadFile(listElement.name);
+                                                }}
+                                            />
 
-                                                <Button
-                                                    basic
-                                                    icon='trash'
-                                                    className='red'
-                                                    onClick={e => {
-                                                        e.stopPropagation();
-                                                        props.delete(listElement.name);
-                                                    }}
-                                                />
+                                            <Button
+                                                basic
+                                                icon='trash'
+                                                className='red'
+                                                onClick={e => {
+                                                    e.stopPropagation();
+                                                    props.delete(listElement.name);
+                                                }}
+                                            />
                                         </Table.Cell>
                                     </Table.Row>
                                 );
