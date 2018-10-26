@@ -20,7 +20,7 @@ class FilesListWrapper extends Component {
                             <FilesList
                                 list={list}
                                 goToDirectory={dir => goToDirectory(dir)}
-                                download={fileName => downloadFile(fileName)}
+                                downloadFile={fileName => downloadFile(fileName)}
                                 delete={name => deleteDirOrFile(name)}
                             /> : 'no files'
                         : 'connect'

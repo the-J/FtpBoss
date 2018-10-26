@@ -137,7 +137,7 @@ class FtpBoss extends Component {
                     list={list}
                     goToDirectory={dir => this.goToDirectory(dir)}
                     deleteDirOrFile={name => this.deleteDirOrFile(name)}
-                    download={fileName => this.downloadFile(fileName)}
+                    downloadFile={fileName => this.downloadFile(fileName)}
                 />
             </FtpBossStyles>
         );

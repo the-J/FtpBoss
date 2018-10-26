@@ -4,21 +4,20 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Header, Table } from 'semantic-ui-react';
+import { Button, Header, Icon, Table } from 'semantic-ui-react';
 
-const FilesList = ( props ) => (
+const FilesList = props => (
     <FilesListStyles>
         <Table
-            basic='very'
             celled
-            textAlign='center'
+            selectable
+            basic='very'
             columns='three'
         >
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell width='eight'>Name</Table.HeaderCell>
-                    <Table.HeaderCell width='four'>Type</Table.HeaderCell>
-                    <Table.HeaderCell width='four'>Actions</Table.HeaderCell>
+                    <Table.HeaderCell width={12} textAlign='left'>Name</Table.HeaderCell>
+                    <Table.HeaderCell width={4} textAlign='center'>Actions</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
 
@@ -26,7 +25,7 @@ const FilesList = ( props ) => (
                 {
 
                     props.list
-                        .sort(( a, b ) => a.type >= b.type)
+                        .sort(( a, b ) => a.type >= b.type || a.name >= b.name)
                         .map(( listElement, i ) => {
                             if (
                                 listElement.type === 'd' ||
@@ -34,58 +33,68 @@ const FilesList = ( props ) => (
                                 listElement.type === 'directory'
                             ) {
                                 return (
-                                    <Table.Row key={i}>
-                                        <Table.Cell>
+                                    <Table.Row
+                                        key={i}
+                                        onClick={() => props.goToDirectory(listElement.name)}
+                                    >
+                                        <Table.Cell textAlign='left'>
                                             <Header as='h4'>
                                                 <Header.Content>
-                                                    {listElement.name}
+                                                    <Icon name='folder open outline' />{listElement.name}
                                                 </Header.Content>
                                             </Header>
                                         </Table.Cell>
 
-                                        <Table.Cell>directory</Table.Cell>
-
-                                        <Table.Cell>
-                                            <Button.Group>
-                                                <Button
-                                                    icon='folder open outline'
-                                                    onClick={() => props.goToDirectory(listElement.name)}
-                                                />
-
-                                                <Button
-                                                    icon='trash'
-                                                    onClick={() => props.delete(listElement.name)}
-                                                />
-                                            </Button.Group>
+                                        <Table.Cell textAlign='center'>
+                                            <Button
+                                                basic
+                                                icon='trash'
+                                                className='red'
+                                                onClick={e => {
+                                                    e.stopPropagation();
+                                                    props.delete(listElement.name);
+                                                }}
+                                            />
                                         </Table.Cell>
                                     </Table.Row>
                                 );
                             }
                             else {
                                 return (
-                                    <Table.Row>
-                                        <Table.Cell>
+                                    <Table.Row
+                                        key={i}
+                                        onClick={() => props.downloadFile(listElement.name)}
+                                    >
+                                        <Table.Cell textAlign='left'>
                                             <Header as='h4'>
                                                 <Header.Content>
-                                                    <Header.Subheader>{listElement.name}</Header.Subheader>
+                                                    <Header.Subheader>
+                                                        <Icon name='file outline' />{listElement.name}
+                                                    </Header.Subheader>
                                                 </Header.Content>
                                             </Header>
                                         </Table.Cell>
 
-                                        <Table.Cell>{listElement.type}</Table.Cell>
-
-                                        <Table.Cell>
-                                            <Button.Group>
+                                        <Table.Cell textAlign='center'>
                                                 <Button
+                                                    basic
                                                     icon='download'
-                                                    onClick={() => props.download(listElement.name)}
+                                                    className='blue'
+                                                    onClick={e => {
+                                                        e.stopPropagation();
+                                                        props.downloadFile(listElement.name);
+                                                    }}
                                                 />
 
                                                 <Button
+                                                    basic
                                                     icon='trash'
-                                                    onClick={() => props.delete(listElement.name)}
+                                                    className='red'
+                                                    onClick={e => {
+                                                        e.stopPropagation();
+                                                        props.delete(listElement.name);
+                                                    }}
                                                 />
-                                            </Button.Group>
                                         </Table.Cell>
                                     </Table.Row>
                                 );
