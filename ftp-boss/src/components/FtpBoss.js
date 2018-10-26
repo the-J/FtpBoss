@@ -12,8 +12,8 @@ import { colors } from '../settings';
 import { currentPath } from '../store/actions/currentPath';
 import { settings } from '../store/actions/settings';
 
-import FilesListWrapper from './FilesListWrapper';
-import ModalAddFileOrDirectory from './ModalAddFileOrDirectory';
+import FilesListWrapper from './FilesList/FilesListWrapper';
+import ModalsWrapper from './Modals/ModalsWrapper';
 import { TopButtons } from './TopButtons';
 
 const { ipcRenderer, remote } = window.require('electron');
@@ -63,7 +63,10 @@ class FtpBoss extends Component {
             : this.setState({ showUploadModal: !this.state.showUploadModal });
     };
 
-    downloadFile = fileName => ipcRenderer.send(ipc.DOWNLOAD, {dirPath: this.props.currentPath.result, fileName: fileName});
+    downloadFile = fileName => ipcRenderer.send(ipc.DOWNLOAD, {
+        dirPath: this.props.currentPath.result,
+        fileName: fileName
+    });
 
     deleteDirOrFile = name => {
         this.setState({ connectingFtp: true });
@@ -113,7 +116,7 @@ class FtpBoss extends Component {
 
         return (
             <FtpBossStyles>
-                <ModalAddFileOrDirectory
+                <ModalsWrapper
                     type={type}
                     showUploadModal={showUploadModal}
                     showHideModal={() => this.showHideUploadModal()}

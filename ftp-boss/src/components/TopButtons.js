@@ -32,6 +32,7 @@ export const TopButtons = props => (
                 />
 
                 <Button
+                    disabled
                     onClick={() => props.uploadModal('file')}
                 >
                     <Icon.Group>
