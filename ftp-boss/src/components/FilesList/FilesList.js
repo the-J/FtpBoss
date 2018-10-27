@@ -4,7 +4,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Header, Icon, Table } from 'semantic-ui-react';
+import { Button, Header, Icon, Popup, Table } from 'semantic-ui-react';
 
 const FilesList = props => (
     <FilesListStyles>
@@ -46,24 +46,38 @@ const FilesList = props => (
                                         </Table.Cell>
 
                                         <Table.Cell textAlign='center'>
-                                            <Button
+                                            <Popup
                                                 basic
-                                                icon='download'
-                                                className='blue'
-                                                onClick={e => {
-                                                    e.stopPropagation();
-                                                    props.downloadFile(listElement.name);
-                                                }}
+                                                content='Download'
+                                                position='bottom center'
+                                                trigger={
+                                                    <Button
+                                                        basic
+                                                        icon='download'
+                                                        className='blue'
+                                                        onClick={e => {
+                                                            e.stopPropagation();
+                                                            props.downloadFile(listElement.name);
+                                                        }}
+                                                    />
+                                                }
                                             />
 
-                                            <Button
+                                            <Popup
                                                 basic
-                                                icon='trash'
-                                                className='red'
-                                                onClick={e => {
-                                                    e.stopPropagation();
-                                                    props.delete(listElement.name);
-                                                }}
+                                                content='Delete'
+                                                position='bottom center'
+                                                trigger={
+                                                    <Button
+                                                        basic
+                                                        icon='trash'
+                                                        className='red'
+                                                        onClick={e => {
+                                                            e.stopPropagation();
+                                                            props.delete(listElement.name);
+                                                        }}
+                                                    />
+                                                }
                                             />
                                         </Table.Cell>
                                     </Table.Row>
@@ -86,24 +100,38 @@ const FilesList = props => (
                                         </Table.Cell>
 
                                         <Table.Cell textAlign='center'>
-                                            <Button
+                                            <Popup
                                                 basic
-                                                icon='download'
-                                                className='blue'
-                                                onClick={e => {
-                                                    e.stopPropagation();
-                                                    props.downloadFile(listElement.name);
-                                                }}
+                                                content='Download'
+                                                position='bottom center'
+                                                trigger={
+                                                    <Button
+                                                        basic
+                                                        icon='download'
+                                                        className='blue'
+                                                        onClick={e => {
+                                                            e.stopPropagation();
+                                                            props.downloadFile(listElement.name);
+                                                        }}
+                                                    />
+                                                }
                                             />
 
-                                            <Button
+                                            <Popup
                                                 basic
-                                                icon='trash'
-                                                className='red'
-                                                onClick={e => {
-                                                    e.stopPropagation();
-                                                    props.delete(listElement.name);
-                                                }}
+                                                content='Delete'
+                                                position='bottom center'
+                                                trigger={
+                                                    <Button
+                                                        basic
+                                                        icon='trash'
+                                                        className='red'
+                                                        onClick={e => {
+                                                            e.stopPropagation();
+                                                            props.delete(listElement.name);
+                                                        }}
+                                                    />
+                                                }
                                             />
                                         </Table.Cell>
                                     </Table.Row>

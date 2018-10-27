@@ -2,8 +2,8 @@
  * Created by juliusz.jakubowski@gmail.com on 10.10.18.
  */
 
-import React from 'react';
-import { Button, Container, Icon } from 'semantic-ui-react';
+import React, { Fragment } from 'react';
+import { Button, Container, Icon, Popup } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 export const TopButtons = props => (
@@ -20,36 +20,75 @@ export const TopButtons = props => (
         {
             props.currentPath.result &&
             props.currentPath.result !== '/' &&
-            <Button.Group basic>
-                <Button
-                    icon='backward'
-                    onClick={() => props.goToDirectory(undefined, 'backwards')}
-                />
 
-                <Button
-                    icon='home'
-                    onClick={() => props.goToDirectory(undefined, 'home')}
-                />
+            <Fragment>
+                <Button.Group basic>
+                    <Popup
+                        basic
+                        content='Go back'
+                        position='bottom center'
+                        trigger={
+                            <Button
+                                disabled={props.connectingFtp}
+                                icon='backward'
+                                onClick={() => props.goToDirectory(undefined, 'backwards')}
+                            />
+                        }
+                    />
 
-                <Button
-                    disabled
-                    onClick={() => props.showHideModal('file')}
+                    <Popup
+                        basic
+                        content='Home'
+                        position='bottom center'
+                        trigger={
+                            <Button
+                                disabled={props.connectingFtp}
+                                icon='home'
+                                onClick={() => props.goToDirectory(undefined, 'home')}
+                            />
+                        }
+                    />
+                </Button.Group>
+
+                <Button.Group
+                    basic
+                    positive
                 >
-                    <Icon.Group>
-                        <Icon name='file' size='small' />
-                        <Icon corner name='add' />
-                    </Icon.Group>
-                </Button>
+                    <Popup
+                        basic
+                        content='Upload files'
+                        position='bottom center'
+                        trigger={
+                            <Button
+                                disabled
+                                onClick={() => props.showHideModal('file')}
+                            >
+                                <Icon.Group>
+                                    <Icon name='file' size='small' />
+                                    <Icon corner name='add' />
+                                </Icon.Group>
+                            </Button>
+                        }
+                    />
 
-                <Button
-                    onClick={() => props.showHideModal('createDirectory')}
-                >
-                    <Icon.Group>
-                        <Icon name='folder' size='small' />
-                        <Icon corner name='add' />
-                    </Icon.Group>
-                </Button>
-            </Button.Group>
+                    <Popup
+                        basic
+                        content='Create directory'
+                        position='bottom center'
+                        trigger={
+                            <Button
+                                disabled={props.connectingFtp}
+                                onClick={() => props.showHideModal('createDirectory')}
+                            >
+                                <Icon.Group>
+                                    <Icon name='folder' size='small' />
+                                    <Icon corner name='add' />
+                                </Icon.Group>
+                            </Button>
+                        }
+                    />
+                </Button.Group>
+            </Fragment>
         }
 
         <Button
