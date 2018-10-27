@@ -143,7 +143,7 @@ function download( arg ) {
     });
 
     // @todo handling bad route
-    if (typeof savePath[ 0 ] !== 'string') return console.log('not string');
+    if (!savePath || typeof savePath[ 0 ] !== 'string') return console.log('not string');
 
     // @todo handling err
     ftp.download(dirPath + '/' + fileName, savePath[ 0 ] + '/' + fileName, err => {
