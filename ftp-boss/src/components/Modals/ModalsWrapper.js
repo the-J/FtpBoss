@@ -1,11 +1,12 @@
 /**
  * Created by juliusz.jakubowski@gmail.com on 26.10.18.
  */
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import connect from 'react-redux/es/connect/connect';
+import { Modal } from 'semantic-ui-react';
 
-import ModalCreateDirectory from './ModalCreateDirectory';
+import CreateDirectory from './CreateDirectory';
 
 const { ipcRenderer, remote } = window.require('electron');
 const ipc = remote.getGlobal('ipc');
@@ -15,8 +16,8 @@ class ModalsWrapper extends Component {
     static propTypes = {
         showHideModal: PropTypes.func.isRequired,
         refreshFiles: PropTypes.func.isRequired,
-        showUploadModal: PropTypes.bool.isRequired,
-        type: PropTypes.string.isRequired
+        showModal: PropTypes.bool.isRequired,
+        modal: PropTypes.string.isRequired
     };
 
     constructor() {
@@ -56,24 +57,30 @@ class ModalsWrapper extends Component {
     };
 
     render() {
-        const { showHideModal, showUploadModal, type, currentPath } = this.props;
+        const { showHideModal, showModal, modal, currentPath } = this.props;
         const { newDirectoryName } = this.state;
 
+        if (!modal) return null;
+
         return (
-            <Fragment>
+            <Modal
+                basic
+                size='small'
+                open={showModal}
+                onClose={showHideModal}
+            >
                 {
-                    type === 'file'
-                        ? undefined
-                        : <ModalCreateDirectory
-                            showHideModal={showHideModal}
-                            showUploadModal={showUploadModal}
-                            currentPath={currentPath}
-                            newDirectoryName={newDirectoryName}
-                            setNewDirectoryName={e => this.newDirectoryName(e)}
-                            createDirectory={e => this.createDirectory(e)}
-                        />
+                    modal === 'createDirectory' &&
+                    <CreateDirectory
+                        currentPath={currentPath}
+                        showHideModal={showHideModal}
+                        newDirectoryName={newDirectoryName}
+                        setNewDirectoryName={e => this.newDirectoryName(e)}
+                        createDirectory={e => this.createDirectory(e)}
+                    />
                 }
-            </Fragment>
+            </Modal>
+
         );
     }
 }

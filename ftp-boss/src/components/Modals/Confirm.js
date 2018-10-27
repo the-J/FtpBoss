@@ -1,17 +1,16 @@
 /**
+ * Created by juliusz.jakubowski@gmail.com on 27.10.18.
+ */
+
+/**
  * Created by juliusz.jakubowski@gmail.com on 19.10.18.
  */
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Button, Header, Icon, Input, Modal } from 'semantic-ui-react';
 
 
-const ModalCreateDirectory = props => (
-    <Modal
-        basic
-        size='small'
-        open={props.showUploadModal}
-        onClose={() => props.showHideModal()}
-    >
+const CreateDirectory = props => (
+    <Fragment>
         <Header icon='folder' content='Create directory ' />
 
         <Modal.Content>
@@ -42,7 +41,7 @@ const ModalCreateDirectory = props => (
                 <Icon name='checkmark' /> Create
             </Button>
         </Modal.Actions>
-    </Modal>
+    </Fragment>
 );
 
-export default ModalCreateDirectory;
+export default CreateDirectory;

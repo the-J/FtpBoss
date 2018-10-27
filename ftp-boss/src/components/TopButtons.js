@@ -33,7 +33,7 @@ export const TopButtons = props => (
 
                 <Button
                     disabled
-                    onClick={() => props.uploadModal('file')}
+                    onClick={() => props.showHideModal('file')}
                 >
                     <Icon.Group>
                         <Icon name='file' size='small' />
@@ -42,7 +42,7 @@ export const TopButtons = props => (
                 </Button>
 
                 <Button
-                    onClick={() => props.uploadModal('dir')}
+                    onClick={() => props.showHideModal('createDirectory')}
                 >
                     <Icon.Group>
                         <Icon name='folder' size='small' />

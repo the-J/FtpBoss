@@ -26,8 +26,8 @@ class FtpBoss extends Component {
         this.state = {
             list: [],
             connectingFtp: false,
-            showUploadModal: false,
-            type: 'file'
+            showModal: false,
+            modal: undefined
         };
     }
 
@@ -57,11 +57,7 @@ class FtpBoss extends Component {
 
     getDirectoryFilesList = ( dirName = '/' ) => ipcRenderer.send(ipc.GET_DIRECTORY_FILES, dirName);
 
-    showHideUploadModal = type => {
-        type
-            ? this.setState({ showUploadModal: !this.state.showUploadModal, type })
-            : this.setState({ showUploadModal: !this.state.showUploadModal });
-    };
+    showHideModal = modal => this.setState({ showModal: !this.state.showModal, modal: modal ? modal : 'hide' });
 
     downloadFile = fileName => ipcRenderer.send(ipc.DOWNLOAD, {
         dirPath: this.props.currentPath.result,
@@ -111,28 +107,18 @@ class FtpBoss extends Component {
     };
 
     render() {
-        const { list, connectingFtp, showUploadModal, type } = this.state;
+        const { list, connectingFtp, showModal, modal } = this.state;
         const { currentPath } = this.props;
 
         return (
             <FtpBossStyles>
-                <ModalsWrapper
-                    type={type}
-                    showUploadModal={showUploadModal}
-                    showHideModal={() => this.showHideUploadModal()}
-                    refreshFiles={() => this.refreshFilesList()}
-                />
-
                 <TopButtons
                     connectingFtp={connectingFtp}
                     currentPath={currentPath}
                     goToDirectory={( dirName, direction ) => this.goToDirectory(dirName, direction)}
-                    uploadModal={type => this.showHideUploadModal(type)}
+                    showHideModal={modal => this.showHideModal(modal)}
                 />
 
-                {/*<pre>*/}
-                {/*{JSON.stringify(this.props, null, '   ')}*/}
-                {/*</pre>*/}
                 <Divider />
 
                 <FilesListWrapper
@@ -141,6 +127,13 @@ class FtpBoss extends Component {
                     goToDirectory={dir => this.goToDirectory(dir)}
                     deleteDirOrFile={name => this.deleteDirOrFile(name)}
                     downloadFile={fileName => this.downloadFile(fileName)}
+                />
+
+                <ModalsWrapper
+                    modal={modal}
+                    showModal={showModal}
+                    showHideModal={() => this.showHideModal(undefined)}
+                    refreshFiles={() => this.refreshFilesList()}
                 />
             </FtpBossStyles>
         );
