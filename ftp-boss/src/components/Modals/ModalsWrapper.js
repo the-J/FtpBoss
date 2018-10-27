@@ -7,6 +7,7 @@ import connect from 'react-redux/es/connect/connect';
 import { Modal } from 'semantic-ui-react';
 
 import CreateDirectory from './CreateDirectory';
+import ConfirmDelete from './ConfirmDelete';
 
 const { ipcRenderer, remote } = window.require('electron');
 const ipc = remote.getGlobal('ipc');
@@ -17,7 +18,9 @@ class ModalsWrapper extends Component {
         showHideModal: PropTypes.func.isRequired,
         refreshFiles: PropTypes.func.isRequired,
         showModal: PropTypes.bool.isRequired,
-        modal: PropTypes.string.isRequired
+        modal: PropTypes.string.isRequired,
+        deleteDirOrFile: PropTypes.func.isRequired,
+        fileToDelete: PropTypes.string.isRequired
     };
 
     constructor() {
@@ -57,10 +60,17 @@ class ModalsWrapper extends Component {
     };
 
     render() {
-        const { showHideModal, showModal, modal, currentPath } = this.props;
+        const {
+            showHideModal,
+            showModal,
+            modal,
+            currentPath,
+            fileToDelete,
+            deleteDirOrFile
+        } = this.props;
         const { newDirectoryName } = this.state;
 
-        if (!modal) return null;
+        if (!modal || modal === 'hide') return null;
 
         return (
             <Modal
@@ -69,18 +79,23 @@ class ModalsWrapper extends Component {
                 open={showModal}
                 onClose={showHideModal}
             >
-                {
-                    modal === 'createDirectory' &&
-                    <CreateDirectory
-                        currentPath={currentPath}
-                        showHideModal={showHideModal}
-                        newDirectoryName={newDirectoryName}
-                        setNewDirectoryName={e => this.newDirectoryName(e)}
-                        createDirectory={e => this.createDirectory(e)}
-                    />
-                }
-            </Modal>
+                {modal === 'createDirectory' &&
+                <CreateDirectory
+                    currentPath={currentPath}
+                    showHideModal={showHideModal}
+                    newDirectoryName={newDirectoryName}
+                    setNewDirectoryName={e => this.newDirectoryName(e)}
+                    createDirectory={e => this.createDirectory(e)}
+                />}
 
+                {modal === 'confirm' &&
+                <ConfirmDelete
+                    currentPath={currentPath}
+                    showHideModal={showHideModal}
+                    fileToDelete={fileToDelete}
+                    deleteDirOrFile={name => deleteDirOrFile(name)}
+                />}
+            </Modal>
         );
     }
 }

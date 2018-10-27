@@ -27,7 +27,8 @@ class FtpBoss extends Component {
             list: [],
             connectingFtp: false,
             showModal: false,
-            modal: undefined
+            modal: undefined,
+            fileToDelete: 'hide'
         };
     }
 
@@ -57,7 +58,13 @@ class FtpBoss extends Component {
 
     getDirectoryFilesList = ( dirName = '/' ) => ipcRenderer.send(ipc.GET_DIRECTORY_FILES, dirName);
 
-    showHideModal = modal => this.setState({ showModal: !this.state.showModal, modal: modal ? modal : 'hide' });
+    showHideModal = ( modal, name ) => {
+        this.setState({
+            showModal: !this.state.showModal,
+            modal: modal ? modal : 'hide',
+            fileToDelete: name ? name : ''
+        });
+    };
 
     downloadFile = fileName => ipcRenderer.send(ipc.DOWNLOAD, {
         dirPath: this.props.currentPath.result,
@@ -107,7 +114,7 @@ class FtpBoss extends Component {
     };
 
     render() {
-        const { list, connectingFtp, showModal, modal } = this.state;
+        const { list, connectingFtp, showModal, modal, fileToDelete } = this.state;
         const { currentPath } = this.props;
 
         return (
@@ -125,15 +132,17 @@ class FtpBoss extends Component {
                     currentPath={currentPath}
                     list={list}
                     goToDirectory={dir => this.goToDirectory(dir)}
-                    deleteDirOrFile={name => this.deleteDirOrFile(name)}
+                    deleteFile={name => this.showHideModal('confirm', name)}
                     downloadFile={fileName => this.downloadFile(fileName)}
                 />
 
                 <ModalsWrapper
                     modal={modal}
                     showModal={showModal}
+                    fileToDelete={fileToDelete}
                     showHideModal={() => this.showHideModal(undefined)}
                     refreshFiles={() => this.refreshFilesList()}
+                    deleteDirOrFile={name => this.deleteDirOrFile(name)}
                 />
             </FtpBossStyles>
         );
