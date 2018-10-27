@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Divider } from 'semantic-ui-react';
+import { Dimmer, Divider, Loader } from 'semantic-ui-react';
 
 import { colors } from '../settings';
 
@@ -119,6 +119,10 @@ class FtpBoss extends Component {
 
         return (
             <FtpBossStyles>
+                <Dimmer active={connectingFtp} inverted>
+                    <Loader inverted />
+                </Dimmer>
+
                 <TopButtons
                     connectingFtp={connectingFtp}
                     currentPath={currentPath}
