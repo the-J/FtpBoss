@@ -7,7 +7,7 @@ import { Button, Container, Icon, Popup } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 export const TopButtons = props => (
-    <Container columnts='equal'>
+    <Container columns='equal'>
         <Button
             basic
             loading={props.connectingFtp}
@@ -60,8 +60,8 @@ export const TopButtons = props => (
                         position='bottom center'
                         trigger={
                             <Button
-                                disabled
-                                onClick={() => props.showHideModal('file')}
+                                disabled={props.connectingFtp}
+                                onClick={() => props.showHideModal('uploadFile')}
                             >
                                 <Icon.Group>
                                     <Icon name='file' size='small' />
