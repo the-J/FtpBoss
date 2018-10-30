@@ -27,8 +27,9 @@ class FtpBoss extends Component {
             list: [],
             connectingFtp: false,
             showModal: false,
-            modal: undefined,
-            fileToDelete: 'hide'
+            modal: '',
+            fileToDelete: 'hide',
+            openFileDialog: false
         };
     }
 
@@ -113,8 +114,18 @@ class FtpBoss extends Component {
         this.getDirectoryFilesList(dirName);
     };
 
+    openCloseFileUploadDialog = () => this.setState({ openFileDialog: !this.state.openFileDialog });
+
     render() {
-        const { list, connectingFtp, showModal, modal, fileToDelete } = this.state;
+        const {
+            list,
+            connectingFtp,
+            showModal,
+            modal,
+            fileToDelete,
+            openFileDialog
+        } = this.state;
+
         const { currentPath } = this.props;
 
         return (
@@ -128,6 +139,7 @@ class FtpBoss extends Component {
                     currentPath={currentPath}
                     goToDirectory={( dirName, direction ) => this.goToDirectory(dirName, direction)}
                     showHideModal={modal => this.showHideModal(modal)}
+                    openFileUploadDialog={() => this.openCloseFileUploadDialog()}
                 />
 
                 <Divider />
@@ -135,9 +147,12 @@ class FtpBoss extends Component {
                 <FilesListWrapper
                     currentPath={currentPath}
                     list={list}
+                    openFileDialog={openFileDialog}
+                    openCloseFileUploadDialog={() => this.openCloseFileUploadDialog()}
                     goToDirectory={dir => this.goToDirectory(dir)}
                     deleteFile={name => this.showHideModal('confirm', name)}
                     downloadFile={fileName => this.downloadFile(fileName)}
+                    showHideModal={() => this.showHideModal(undefined)}
                 />
 
                 <ModalsWrapper

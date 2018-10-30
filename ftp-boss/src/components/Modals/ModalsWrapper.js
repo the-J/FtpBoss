@@ -8,7 +8,6 @@ import { Modal } from 'semantic-ui-react';
 
 import CreateDirectory from './CreateDirectory';
 import ConfirmDelete from './ConfirmDelete';
-import Upload from './Upload';
 
 const { ipcRenderer, remote } = window.require('electron');
 const ipc = remote.getGlobal('ipc');
@@ -27,10 +26,7 @@ class ModalsWrapper extends Component {
     constructor() {
         super();
 
-        this.state = {
-            newDirectoryName: '',
-            filesToUpload: []
-        };
+        this.state = { newDirectoryName: '' };
     }
 
     componentDidMount() {
@@ -61,29 +57,9 @@ class ModalsWrapper extends Component {
         showHideModal();
     };
 
-    handleOnDrop = files => {
-        if (!files.length) return console.log('no files droped');
-
-        const filesToUpload = this.state.filesToUpload;
-
-        for (let file of files) {
-            console.log({file});
-            files.push({
-                name: file.name,
-                path: file.path
-            });
-        }
-
-        this.setState({ filesToUpload });
-
-        console.log(files, filesToUpload);
-    };
-
-    removeFilesFromList = filename => console.log(filename);
-
-    uploadFiles = () => console.log('upload files');
-
     render() {
+        if (!this.props.modal || this.props.modal === 'hide') return null;
+
         const {
             showHideModal,
             showModal,
@@ -92,9 +68,8 @@ class ModalsWrapper extends Component {
             fileToDelete,
             deleteDirOrFile
         } = this.props;
-        const { newDirectoryName } = this.state;
 
-        if (!modal || modal === 'hide') return null;
+        const { newDirectoryName } = this.state;
 
         return (
             <Modal
@@ -118,14 +93,6 @@ class ModalsWrapper extends Component {
                     showHideModal={showHideModal}
                     fileToDelete={fileToDelete}
                     deleteDirOrFile={name => deleteDirOrFile(name)}
-                />}
-
-                {modal === 'uploadFile' &&
-                <Upload
-                    showHideModal={showHideModal}
-                    removeFile={name => this.removeFilesFromList(name)}
-                    handdleOnDrop={e => this.handleOnDrop(e)}
-                    uploadFiles={() => this.uploadFiles()}
                 />}
             </Modal>
         );

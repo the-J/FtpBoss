@@ -3,21 +3,53 @@
  */
 
 import React, { Fragment } from 'react';
+import styled from 'styled-components';
 import { Button, Header, Modal } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
 
 
 const CreateDirectory = props => (
     <Fragment>
-        <Header icon='file' content='Upload files' />
+        <Header icon='file' content='Drop files here' />
 
         <Modal.Content>
-            <h4>Drop files here</h4>
-            <Dropzone onDrop={e => {
-                if (!e.length) return console.log('no files droped');
+            <Dropzone
+                disableClick
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    padding: '2.5em 0',
+                    background: 'rgba(0,0,0,0.5)',
+                    textAlign: 'center',
+                    color: '#fff'
+                }}
+                onDrop={e => props.onDrop(e)}
+                onDragEnter={() => props.onDragEnter()}
+                onDragLeave={() => props.onDragLeave()}
+            >
 
-                props.handdleOnDrop(e)
-            }} />
+                {
+                    props.dropzoneActive && <span style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        left: 0,
+                        padding: '2.5em 0',
+                        background: 'rgba(0,0,0,0.5)',
+                        textAlign: 'center',
+                        color: '#fff'
+                    }} />
+                }
+                <ul>
+                    {
+                        props.filesToUpload.map(( file, index ) => <li key={index}>{file.name} - {file.path}</li>)
+                    }
+                </ul>
+            </Dropzone>
         </Modal.Content>
 
         <Modal.Actions>
@@ -25,20 +57,37 @@ const CreateDirectory = props => (
                 inverted
                 icon='remove'
                 content='Abort'
-                color='red'
-                onClick={() => props.showHideModal()}
+                onClick={e => {
+                    console.log({ e });
+                    props.removeFile();
+                    props.showHideModal();
+                }}
             />
 
             <Button
                 inverted
                 icon='checkmark'
-                content='Create'
+                content='Upload'
                 color='green'
-                disabled={!props.newDirectoryName}
-                onClick={() => props.uploadFiles()}
+                disabled={!props.filesToUpload.length}
+                onClick={() => {
+                    props.showHideModal();
+                    props.uploadFiles();
+                }}
             />
         </Modal.Actions>
     </Fragment>
 );
 
+const DropZoneStyles = styled.div`
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    // padding: '2.5em 0';
+                    textAlign: center;
+                    color: #fff;
+                    border: grey 2px solid
+                `;
 export default CreateDirectory;

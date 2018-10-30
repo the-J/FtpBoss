@@ -61,7 +61,7 @@ export const TopButtons = props => (
                         trigger={
                             <Button
                                 disabled={props.connectingFtp}
-                                onClick={() => props.showHideModal('uploadFile')}
+                                onClick={() => props.openFileUploadDialog()}
                             >
                                 <Icon.Group>
                                     <Icon name='file' size='small' />
