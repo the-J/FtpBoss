@@ -81,6 +81,13 @@ class FilesListWrapper extends Component {
         let filesToUpload = this.state.filesToUpload;
 
         if (!fileName) filesToUpload = [];
+        else {
+            const index = filesToUpload
+                .map(file => file.name)
+                .indexOf(fileName);
+
+            if (index !== -1) filesToUpload.splice(index, 1);
+        }
 
         this.setState({ filesToUpload });
     };
@@ -118,17 +125,13 @@ class FilesListWrapper extends Component {
                     {openFileDialog ? dropzoneRef.current.open() : null}
 
                     {
-                        dropzoneActive && <span style={{
-                            position: 'absolute',
-                            top: 0,
-                            right: 0,
-                            bottom: 0,
-                            left: 0,
-                            padding: '2.5em 0',
-                            background: 'rgba(0,0,0,0.5)',
-                            textAlign: 'center',
-                            color: '#fff'
-                        }} />
+                        currentPath.result || currentPath.result === '' ?
+                            filesToUpload && !!filesToUpload.length ?
+                                <UploadFilesList
+                                    list={filesToUpload}
+                                    removeFilesFromList={name => this.removeFilesFromList(name)}
+                                    uploadFiles={() => this.uploadFiles()}
+                                /> : null : null
                     }
 
                     {
