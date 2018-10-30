@@ -67,10 +67,17 @@ class FilesListWrapper extends Component {
         const filesToUpload = this.state.filesToUpload;
 
         for (let file of accepted) {
-            filesToUpload.push({
-                name: file.name,
-                path: file.path
-            });
+            const index = filesToUpload
+                .map(file => file.name)
+                .indexOf(file.name);
+
+            if (index === -1) {
+                filesToUpload.push({
+                    name: file.name,
+                    path: file.path
+                });
+            }
+            else console.log('fle already on the list');
         }
 
         this.setState({ filesToUpload });
@@ -121,7 +128,7 @@ class FilesListWrapper extends Component {
                     onDragLeave={() => this.onDragLeave()}
                     onFileDialogCancel={() => openCloseFileUploadDialog()}
                 >
-                    {dropzoneActive && <span style={dropzoneActiveStyles}/>}
+                    {dropzoneActive && <span style={dropzoneActiveStyles} />}
                     {openFileDialog ? dropzoneRef.current.open() : null}
 
                     {
