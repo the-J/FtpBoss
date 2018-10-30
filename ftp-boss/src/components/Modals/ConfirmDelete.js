@@ -18,7 +18,6 @@ const ConfirmDelete = props => (
                 inverted
                 icon='remove'
                 content='Cancel'
-                color='red'
                 onClick={() => props.showHideModal()}
             />
 
@@ -26,7 +25,7 @@ const ConfirmDelete = props => (
                 inverted
                 icon='checkmark'
                 content='Confirm'
-                color='green'
+                color='red'
                 onClick={() => {
                     props.showHideModal();
                     props.deleteDirOrFile(props.fileToDelete)
