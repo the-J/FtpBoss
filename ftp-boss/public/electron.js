@@ -81,7 +81,9 @@ global.ipc = {
     REMOVE_DIR_OR_FILE: 'remove-directory-or-file',
     REMOVE_DIR_OR_FILE_CB: 'remove-directory-or-file-callback',
     DOWNLOAD: 'download-from-ftp',
-    DOWNLOAD_CB: 'download-from-ftp-callback'
+    DOWNLOAD_CB: 'download-from-ftp-callback',
+    UPLOAD: 'upload-to-ftp-',
+    UPLOAD_CB: 'upload-to-ftp-callback'
 };
 
 /**
@@ -152,7 +154,31 @@ function download( arg ) {
 
         ftp.close();
     });
+}
 
+/**
+ *
+ * @param arg
+ * @param {Array.<Object>} filesToUpload
+ * @param filesToUpload.path {string}
+ * @param ftpPath {string}
+ */
+function upload( arg ) {
+    const ftp = new EasyFtp();
+    ftp.connect(serverCredentials());
+
+    const { ftpPath, filesToUpload } = { ...arg };
+
+    if (!filesToUpload || !filesToUpload.length) return console.log('no files to upload');
+
+    const filePaths = filesToUpload.map(file => file.path);
+
+    ftp.upload(filePaths, ftpPath, err => {
+        if (err) console.log('saving file err:', err);
+        else mainWindow.send(ipc.UPLOAD_CB);
+
+        ftp.close();
+    });
 }
 
 function removeFileOrDirectory( arg ) {
@@ -199,3 +225,4 @@ ipcMain.on(ipc.GET_SETTINGS, ( event, arg ) => getSettings(arg));
 ipcMain.on(ipc.CREATE_DIRECTORY, ( event, arg ) => createDirectory(arg));
 ipcMain.on(ipc.REMOVE_DIR_OR_FILE, ( event, arg ) => removeFileOrDirectory(arg));
 ipcMain.on(ipc.DOWNLOAD, ( event, arg ) => download(arg));
+ipcMain.on(ipc.UPLOAD, ( event, arg ) => upload(arg));
